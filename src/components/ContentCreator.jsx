@@ -2,11 +2,19 @@ import React, { PureComponent } from 'react';
 import ReactDOM from 'react-dom';
 import uuidv4 from 'uuid/v4';
 import loremIpsum from 'lorem-ipsum';
-import { TextField, Paper, Button, Grid, withStyles } from '@material-ui/core';
-import { ModeComment } from '@material-ui/icons';
+import { TextField, IconButton, Paper, Button, Grid, withStyles } from '@material-ui/core';
+import { ModeComment, Delete } from '@material-ui/icons';
+import RGL, { WidthProvider } from "react-grid-layout";
 import './ContentCreator.scss';
 
+const ReactGridLayout = WidthProvider(RGL);
+
 const styles = (theme) => ({
+  closeButton: {
+    position: 'absolute',
+    right: 2,
+    top: 2
+  },
   draggable: {
     // position: 'relative',
     // background: 'red',
@@ -19,8 +27,11 @@ const styles = (theme) => ({
   paper: {
     // minHeight: 200,
     padding: theme.spacing.unit,
-    margin: theme.spacing.unit,
+    // margin: theme.spacing.unit,
     overflow: 'hidden'
+  },
+  text: {
+    width: '98%'
   },
   controls: {
     position: 'fixed',
@@ -29,175 +40,65 @@ const styles = (theme) => ({
   }
 });
 
-const newPaperPlaceholder = 'Enter text here...'
-
-const NewPaper = withStyles(styles)((props) => {
-  const { classes } = props;
-  // const li = loremIpsum({ count: 10 });
-  // console.log(li);
-  return (<Paper
-    style={{ background: 'red' }}
-    className={`${classes.paper}`}>
-    {newPaperPlaceholder}
-  </Paper>);
-});
-
 class ContentCreator extends PureComponent {
   constructor(props) {
     super(props);
 
+    const newId = uuidv4();
+
     this.state = {
       isDragging: false,
-      fields: [
-        { id: uuidv4(), text: loremIpsum({ count: 10 }) },
-        { id: uuidv4(), text: loremIpsum({ count: 10 }) }
-      ],
-      addedFieldIds: []
+      newId,
+      layout: [
+        { i: uuidv4(), x: 0, y: 0, w: 19, h: 1 },
+        { i: uuidv4(), x: 0, y: 1, w: 19, h: 1 },
+        { i: uuidv4(), x: 0, y: 2, w: 19, h: 1 },
+        { i: newId, x: 19, y: 0, w: 1, h: 1 }
+      ]
     };
 
-    this.el = document.createElement('div');
-    this.draggingEl = document.createElement('div');
+    this.state.fields = this.state.layout.filter(x => x.i !== newId).map(x => ({ i: x.i, text: loremIpsum({ count: 10 }) }));
+    this.state.fields.push({ i: newId, text: 'Text Field' });
   }
 
-  componentDidMount() {
-    document.body.appendChild(this.el);
-  }
-
-  setFielContainerRef = (ref) => {
-    this.fieldContainerRef = ref;
-    if (this.fieldContainerRef) {
-
-      const mouseup = (e) => {
-        // console.log('here')
-        if (this.state.isDragging) {
-          this.draggingEl.parentNode.removeChild(this.draggingEl);
-          const childNodes = Array.from(this.fieldContainerRef.childNodes);
-          // console.log(e, e.clientY, childNodes.map(x => x.getBoundingClientRect().top));
-          // console.log(childNodes);
-          // console.log(e, e.clientY, childNodes[0].offsetTop, childNodes[1].offsetTop);
-          let index = 0;
-          for (let i = childNodes.length - 1; i >= 0; i--) {
-            const top = childNodes[i].getBoundingClientRect().top;
-            // console.log(e.screenY, top)
-            if (e.clientY > top) {
-              index = i + 1;
-              break;
-            }
-          }
-
-          // console.log(e, childNodes[0].offsetTop);
-          const fields = [...this.state.fields];
-          const newPaper = { id: uuidv4(), text: newPaperPlaceholder }
-          fields.splice(index, 0, newPaper);
-          this.setState(state => ({ fields, addedFieldIds: [...state.addedFieldIds, newPaper.id] }));
-          setTimeout(() => {
-            const addedFieldIds = [...this.state.addedFieldIds];
-            const index2 = addedFieldIds.findIndex(x => x.id === newPaper);
-            addedFieldIds.splice(index2, 1);
-            this.setState(state => ({ addedFieldIds }));
-          }, 2000);
-        }
-        // this.isDragging = false;
-      };
-      this.fieldContainerRef.addEventListener('mouseup', mouseup);
+  onLayoutChange = (layout) => {
+    const c = layout.find(x => x.i === this.state.newId);
+    if (c.x !== 19) {
+      c.x = 0;
+      c.w = 19;
+      const newId = uuidv4();
+      layout.push({ i: newId, x: 19, y: 0, w: 1, h: 1 });
+      const fields = [...this.state.fields, { i: newId, text: 'Text Field' }];
+      const field = fields.find(x => x.i === this.state.newId);
+      field.text = loremIpsum({ count: 10 });
+      this.setState({ newId, fields, layout });
     }
   }
 
-  setDraggableRef = (ref) => {
-    this.draggableRef = ref;
-    if (this.draggableRef) {
-      const mousedown = (e1) => {
-        this.setState(state => ({ isDragging: true }));
-        // this.isDragging = true;
-        // this.draggableRef.style.position = 'absolute';
-        // this.draggableRef.style['pointer-events'] = 'none';
-        const sx = e1.x;
-        const sy = e1.y;
-        // console.log(e1, sx);
-        // let t = false;
-
-        const mousemove = (e2) => {
-          e2.preventDefault();
-          // console.log(e2);
-          const target = e2.target;
-          // if (!target.parentElement.contains())
-          // && !target.parentElement.contains(this.draggingEl)
-
-          const x = e2.x;
-          const y = e2.y;
-
-          if (target.parentElement && this.fieldContainerRef.contains(target)) {
-            if (!this.draggingEl.contains(target.parentNode)) {
-              // console.log(this.draggingEl, target.parentNode);
-              const b1 = target.getBoundingClientRect();
-              // console.log(y, b1);
-              if (y > b1.y + b1.height / 2) {
-                target.parentNode.insertBefore(this.draggingEl, target.nextSibling);
-              } else {
-                target.parentNode.insertBefore(this.draggingEl, target);
-              }
-            }
-          }
-
-          // console.log(x, sx, x - sx)
-          // this.draggableRef.style.left = `${x - sx}px`;
-          // this.draggableRef.style.top = `${y - sy}px`;
-        };
-        document.addEventListener('mousemove', mousemove);
-
-        const mouseup = (e3) => {
-          document.removeEventListener('mousemove', mousemove);
-          // this.draggableRef.style.position = 'relative';
-          // this.draggableRef.style.left = null;
-          // this.draggableRef.style.top = null;
-          // this.draggableRef.style['pointer-events'] = null;
-          // this.isDragging = false;
-          this.setState(state => ({ isDragging: false }))
-        };
-        document.addEventListener('mouseup', mouseup);
-      };
-      this.draggableRef.addEventListener('mousedown', mousedown);
-    }
+  deleteComponent = (i) => {
+    const fields = this.state.fields.filter(x => x.i !== i);
+    this.setState({ fields });
+    // console.log(e.target.parentNode);
   }
 
   render() {
     const { classes } = this.props;
-    const { fields, addedFieldIds, isDragging } = this.state;
+    const { fields } = this.state;
+
     return (
       <div>
-        <Grid container>
-          <Grid item xs={8}>
-            <div ref={this.setFielContainerRef}>
-              {fields.map((field, i) => (
-                // <TextField
-                //   key={field.id}
-                //   className={classes.field}
-                //   fullWidth
-                //   multiline
-                //   placeholder={`${field.id} Add some content`}
-                // />
-                <Paper
-                  key={field.id}
-                  className={`${classes.paper} ${addedFieldIds.includes(field.id) ? 'flash-button' : ''}`}>
-                  {field.text}
-                </Paper>
-              ))}
-            </div>
-          </Grid>
-        </Grid>
-        {ReactDOM.createPortal(
-          <div className={classes.controls}>
-            <div className={classes.draggable} ref={this.setDraggableRef}>
-              <ModeComment />
-            </div>
-          </div>,
-          this.el
-        )}
-        {isDragging &&
-          ReactDOM.createPortal(
-            <NewPaper />,
-            this.draggingEl
-          )}
+        <ReactGridLayout cols={20} onLayoutChange={this.onLayoutChange} layout={this.state.layout}>
+          {fields.map((field) => (
+            <Paper key={field.i} className={classes.paper}>
+              <div className={classes.text}>{field.text}</div>
+              {field.i !== this.state.newId &&
+                <IconButton aria-label="Delete" className={classes.closeButton} onClick={() => this.deleteComponent(field.i)}>
+                  <Delete fontSize="small" />
+                </IconButton>
+              }
+            </Paper>
+          ))}
+        </ReactGridLayout>
       </div>
     );
   }

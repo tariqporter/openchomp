@@ -1,6 +1,9 @@
 import React, { PureComponent } from 'react';
 import ContentCreator from './components/ContentCreator';
 import { withStyles } from '@material-ui/core';
+import '../node_modules/react-grid-layout/css/styles.css';
+import '../node_modules/react-resizable/css/styles.css';
+import './App.css';
 
 const styles = () => ({
   root: {
@@ -14,7 +17,6 @@ class App extends PureComponent {
     return (
       <div className={classes.root}>
         <ContentCreator />
-        <div id="controls"></div>
       </div>
     );
   }
