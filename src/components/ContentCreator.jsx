@@ -1,7 +1,7 @@
-import React, { PureComponent } from 'react';
-import ReactDOM from 'react-dom';
+import React, { PureComponent, Fragment } from 'react';
+// import ReactDOM from 'react-dom';
 import uuidv4 from 'uuid/v4';
-import loremIpsum from 'lorem-ipsum';
+// import loremIpsum from 'lorem-ipsum';
 import { TextField, IconButton, Paper, Button, Grid, withStyles } from '@material-ui/core';
 import { ModeComment, Delete } from '@material-ui/icons';
 // import RGL, { WidthProvider } from "react-grid-layout";
@@ -74,11 +74,6 @@ const styles = (theme) => ({
   },
   left: {
     background: '#ddd'
-  },
-  MuiInputBase: {
-    root: {
-      background: 'red'
-    }
   }
 });
 
@@ -86,20 +81,29 @@ const cl = (...classArr) => {
   return classArr.join(' ');
 };
 
-class Drag extends PureComponent {
+class DragBar extends PureComponent {
   render() {
+    const { dragBarRef } = this.props;
     return (
-      <div data-custom-id style={{ wifth: '100%', height: 20, background: '#eee' }}></div>
+      <div ref={dragBarRef} style={{ wifth: '100%', height: 40, background: '#eee' }}></div>
     );
   }
 }
 
 class DragControl extends PureComponent {
   render() {
-    const { control, classes, onKeyChange, inputRef } = this.props;
+    const { control, classes, onKeyChange, deleteControl, inputRef, dragBarRef } = this.props;
     return (
       <Paper key={control.id} className={classes.child} style={control}>
-        {!control.isDragControl && <Drag />}
+        {
+          !control.isDragControl &&
+          <Fragment>
+            <DragBar dragBarRef={dragBarRef} />
+            <IconButton className={classes.closeButton} onClick={deleteControl}>
+              <Delete />
+            </IconButton>
+          </Fragment>
+        }
         <TextField
           inputRef={inputRef}
           onChange={onKeyChange}
@@ -121,19 +125,21 @@ class ContentCreator extends PureComponent {
 
     this.isDragging = false;
     this.dragControlRefs = {};
+    this.dragBarRefs = {};
 
     this.state = {
+      nextId: 1,
+      defaultControl: { id: 0, left: 0, top: 0, width: null, zIndex: 1, isDragControl: true, text: 'Text Block', placeholder: '' },
       controls: [
         { id: 0, left: 0, top: 0, width: null, zIndex: 1, isDragControl: true, text: 'Text Block', placeholder: '' },
-        { id: 1, left: 0, top: 75, width: null, zIndex: 1, isDragControl: true, text: 'Text Block', placeholder: '' }
+        // { id: 1, left: 0, top: 75, width: null, zIndex: 1, isDragControl: true, text: 'Text Block', placeholder: '' }
       ]
     };
   }
 
   onStart = (id, e, { node, deltaX, deltaY }) => {
-    const customId = e.target.getAttribute('data-custom-id');
     const control = this.state.controls.find(c => c.id === id);
-    if (!control.isDragControl && customId !== null) {
+    if (!control.isDragControl && e.target === this.dragBarRefs[id]) {
       this.isDragging = true;
     }
 
@@ -179,16 +185,18 @@ class ContentCreator extends PureComponent {
           width: containerRect.width,
           isDragControl: false,
           text: '',
-          placeholder: 'Type your Text Block here...',
+          placeholder: 'Type some content',
           zIndex: 99
         };
         return { ...c, ...newPosition };
       }
       return c;
     });
-    this.setState({ controls }, () => {
+    controls.push({ ...this.state.defaultControl, id: this.state.nextId });
+    this.setState(state => ({ controls, nextId: state.nextId + 1 }), () => {
       this.dragControlRefs[id].select();
     });
+    console.log(this.state.controls.length)
   }
 
   onKeyChange = (id, e) => {
@@ -205,6 +213,15 @@ class ContentCreator extends PureComponent {
 
   setDragControlRef = (id, ref) => {
     this.dragControlRefs[id] = ref;
+  }
+
+  setDragBarRef = (id, ref) => {
+    this.dragBarRefs[id] = ref;
+  }
+
+  deleteControl = (id) => {
+    const controls = this.state.controls.filter(c => c.id !== id);
+    this.setState({ controls });
   }
 
   render() {
@@ -231,7 +248,10 @@ class ContentCreator extends PureComponent {
                       <div>
                         <DragControl
                           inputRef={r => this.setDragControlRef(control.id, r)}
+                          dragBarRef={r => this.setDragBarRef(control.id, r)}
                           control={control}
+                          onKeyChange={this.onKeyChange.bind(this, control.id)}
+                          deleteControl={this.deleteControl.bind(this, control.id)}
                           classes={classes}
                         />
                       </div>
