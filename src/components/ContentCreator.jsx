@@ -74,6 +74,11 @@ const styles = (theme) => ({
   },
   left: {
     background: '#ddd'
+  },
+  MuiInputBase: {
+    root: {
+      background: 'red'
+    }
   }
 });
 
@@ -81,14 +86,37 @@ const cl = (...classArr) => {
   return classArr.join(' ');
 };
 
+class DragControl extends PureComponent {
+  render() {
+    const { control, classes, onKeyChange, inputRef } = this.props;
+    return (
+      <Paper key={control.id} className={classes.child} style={control}>
+        {!control.isDragControl && <div style={{ wifth: '100%', height: 20, background: 'red' }}></div>}
+        <TextField
+          inputRef={inputRef}
+          onChange={onKeyChange}
+          multiline
+          // classes={{ MuiInputBase: { root: 'my-class-name' } }}
+          className={cl(classes.text, control.isDragControl && 'dragging')}
+          disabled={control.isDragControl}
+          value={control.text}
+          placeholder={control.placeholder}
+        />
+      </Paper>
+    );
+  }
+}
+
 class ContentCreator extends PureComponent {
   constructor(props) {
     super(props);
 
+    this.dragControlRefs = {};
+
     this.state = {
       controls: [
-        { id: 0, left: 0, top: 0, width: null, zIndex: 1, isDragControl: true, text: 'Text Block' },
-        { id: 1, left: 0, top: 75, width: null, zIndex: 1, isDragControl: true, text: 'Text Block' }
+        { id: 0, left: 0, top: 0, width: null, zIndex: 1, isDragControl: true, text: 'Text Block', placeholder: '' },
+        { id: 1, left: 0, top: 75, width: null, zIndex: 1, isDragControl: true, text: 'Text Block', placeholder: '' }
       ]
     };
   }
@@ -97,50 +125,67 @@ class ContentCreator extends PureComponent {
     const { offsetParent } = node;
     const parentRect = offsetParent.getBoundingClientRect();
     const clientRect = node.getBoundingClientRect();
-    const newPosition = { top: 0, left: 0 };
-    newPosition.left = clientRect.left - parentRect.left + offsetParent.scrollLeft;
-    newPosition.top = clientRect.top - parentRect.top + offsetParent.scrollTop;
-    const controls = [...this.state.controls];
-    const control = controls.find(x => x.id === id);
-    control.top = newPosition.top;
-    control.left = newPosition.left;
-    control.zIndex = 99;
+    const controls = this.state.controls.map(c => {
+      if (c.id === id) {
+        const newPosition = {
+          top: c.top + clientRect.top - parentRect.top + offsetParent.scrollTop,
+          left: c.left + clientRect.left - parentRect.left + offsetParent.scrollLeft,
+          zIndex: 99
+        };
+        return { ...c, ...newPosition };
+      }
+      return c;
+    });
     this.setState({ controls });
   }
 
   onDrag = (id, e, { node, deltaX, deltaY }) => {
-
-    const controls = [...this.state.controls];
-    const control = controls.find(x => x.id === id);
-
-    const newPosition = { top: 0, left: 0 };
-    newPosition.left = control.left + deltaX;
-    newPosition.top = control.top + deltaY;
-
-    // const docRect = document.body.getBoundingClientRect();
-    // const controlsContainerRect = this.controlsContainerRef.getBoundingClientRect();
-    // const containerRect = this.containerRef.getBoundingClientRect();
-
-    // const x = controlsContainerRect.x + newPosition.left - containerRect.x;
-    // const y = controlsContainerRect.y + newPosition.top - containerRect.y;
-    // console.log(y, controlsContainerRect, containerRect, newPosition);
-
-    control.top = newPosition.top;
-    control.left = newPosition.left;
+    const controls = this.state.controls.map(c => {
+      if (c.id === id) {
+        const newPosition = { top: c.top + deltaY, left: c.left + deltaX };
+        return { ...c, ...newPosition };
+      }
+      return c;
+    });
     this.setState({ controls });
   }
 
   onStop = (id, e, { node, deltaX, deltaY }) => {
-    const controls = [...this.state.controls];
-    const control = controls.find(x => x.id === id);
-    control.zIndex = 1;
     const controlsContainerRect = this.controlsContainerRef.getBoundingClientRect();
     const containerRect = this.containerRef.getBoundingClientRect();
-    control.left = containerRect.x - controlsContainerRect.x;
-    control.width = containerRect.width;
-    control.isDragControl = false;
-    control.text = loremIpsum({ count: 10 });
+    const controls = this.state.controls.map(c => {
+      if (c.id === id) {
+        const newPosition = {
+          left: containerRect.x - controlsContainerRect.x,
+          width: containerRect.width,
+          isDragControl: false,
+          text: '',
+          placeholder: 'Type your Text Block here...',
+          zIndex: 99
+        };
+        return { ...c, ...newPosition };
+      }
+      return c;
+    });
+    this.setState({ controls }, () => {
+      this.dragControlRefs[id].select();
+    });
+  }
+
+  onKeyChange = (id, e) => {
+    const text = e.target.value;
+    const controls = this.state.controls.map(c => {
+      if (c.id === id) {
+        const newPosition = { text };
+        return { ...c, ...newPosition };
+      }
+      return c;
+    });
     this.setState({ controls });
+  };
+
+  setDragControlRef = (id, ref) => {
+    this.dragControlRefs[id] = ref;
   }
 
   render() {
@@ -164,23 +209,22 @@ class ContentCreator extends PureComponent {
                       onDrag={this.onDrag.bind(this, control.id)}
                       onStop={this.onStop.bind(this, control.id)}
                     >
-                      <Paper className={classes.child} style={control}>
-                        <TextField
-                          multiline
-                          className={cl(classes.text, control.isDragControl && 'dragging')}
-                          disabled={control.isDragControl}
-                          value={control.text}
+                      <div>
+                        <DragControl
+                          inputRef={r => this.setDragControlRef(control.id, r)}
+                          control={control}
+                          classes={classes}
                         />
-                      </Paper>
+                      </div>
                     </DraggableCore> :
-                    <Paper key={control.id} className={classes.child} style={control}>
-                      <TextField
-                        multiline
-                        className={cl(classes.text, control.isDragControl && 'dragging')}
-                        disabled={control.isDragControl}
-                        value={control.text}
-                      />
-                    </Paper>);
+                    <DragControl
+                      key={control.id}
+                      inputRef={r => this.setDragControlRef(control.id, r)}
+                      control={control}
+                      onKeyChange={this.onKeyChange.bind(this, control.id)}
+                      classes={classes}
+                    />
+                  );
                 })}
               </div>
             </div>
