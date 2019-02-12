@@ -139,9 +139,9 @@ class ContentCreator extends PureComponent {
 
   onStart = (id, e, { node, deltaX, deltaY }) => {
     const control = this.state.controls.find(c => c.id === id);
-    if (!control.isDragControl && e.target === this.dragBarRefs[id]) {
-      this.isDragging = true;
-    }
+
+    if (!control.isDragControl && e.target !== this.dragBarRefs[id]) return;
+    this.isDragging = true;
 
     const { offsetParent } = node;
     const parentRect = offsetParent.getBoundingClientRect();
@@ -175,6 +175,7 @@ class ContentCreator extends PureComponent {
   }
 
   onStop = (id, e, { node, deltaX, deltaY }) => {
+    if (!this.isDragging) return;
     this.isDragging = false;
     const controlsContainerRect = this.controlsContainerRef.getBoundingClientRect();
     const containerRect = this.containerRef.getBoundingClientRect();
@@ -192,11 +193,11 @@ class ContentCreator extends PureComponent {
       }
       return c;
     });
+    
     controls.push({ ...this.state.defaultControl, id: this.state.nextId });
     this.setState(state => ({ controls, nextId: state.nextId + 1 }), () => {
       this.dragControlRefs[id].select();
     });
-    console.log(this.state.controls.length)
   }
 
   onKeyChange = (id, e) => {
