@@ -86,12 +86,20 @@ const cl = (...classArr) => {
   return classArr.join(' ');
 };
 
+class Drag extends PureComponent {
+  render() {
+    return (
+      <div data-custom-id style={{ wifth: '100%', height: 20, background: '#eee' }}></div>
+    );
+  }
+}
+
 class DragControl extends PureComponent {
   render() {
     const { control, classes, onKeyChange, inputRef } = this.props;
     return (
       <Paper key={control.id} className={classes.child} style={control}>
-        {!control.isDragControl && <div style={{ wifth: '100%', height: 20, background: 'red' }}></div>}
+        {!control.isDragControl && <Drag />}
         <TextField
           inputRef={inputRef}
           onChange={onKeyChange}
@@ -111,6 +119,7 @@ class ContentCreator extends PureComponent {
   constructor(props) {
     super(props);
 
+    this.isDragging = false;
     this.dragControlRefs = {};
 
     this.state = {
@@ -122,6 +131,12 @@ class ContentCreator extends PureComponent {
   }
 
   onStart = (id, e, { node, deltaX, deltaY }) => {
+    const customId = e.target.getAttribute('data-custom-id');
+    const control = this.state.controls.find(c => c.id === id);
+    if (!control.isDragControl && customId !== null) {
+      this.isDragging = true;
+    }
+
     const { offsetParent } = node;
     const parentRect = offsetParent.getBoundingClientRect();
     const clientRect = node.getBoundingClientRect();
@@ -140,6 +155,9 @@ class ContentCreator extends PureComponent {
   }
 
   onDrag = (id, e, { node, deltaX, deltaY }) => {
+    const control = this.state.controls.find(c => c.id === id);
+    if (!control.isDragControl && !this.isDragging) return;
+
     const controls = this.state.controls.map(c => {
       if (c.id === id) {
         const newPosition = { top: c.top + deltaY, left: c.left + deltaX };
@@ -151,6 +169,7 @@ class ContentCreator extends PureComponent {
   }
 
   onStop = (id, e, { node, deltaX, deltaY }) => {
+    this.isDragging = false;
     const controlsContainerRect = this.controlsContainerRef.getBoundingClientRect();
     const containerRect = this.containerRef.getBoundingClientRect();
     const controls = this.state.controls.map(c => {
@@ -202,7 +221,7 @@ class ContentCreator extends PureComponent {
             <div className={classes.container}>
               <div className={classes.innerContainer} ref={r => this.controlsContainerRef = r}>
                 {controls.map(control => {
-                  return (control.isDragControl ?
+                  return (
                     <DraggableCore
                       key={control.id}
                       onStart={this.onStart.bind(this, control.id)}
@@ -216,14 +235,7 @@ class ContentCreator extends PureComponent {
                           classes={classes}
                         />
                       </div>
-                    </DraggableCore> :
-                    <DragControl
-                      key={control.id}
-                      inputRef={r => this.setDragControlRef(control.id, r)}
-                      control={control}
-                      onKeyChange={this.onKeyChange.bind(this, control.id)}
-                      classes={classes}
-                    />
+                    </DraggableCore>
                   );
                 })}
               </div>
