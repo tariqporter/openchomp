@@ -1,10 +1,10 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { TextField, Paper, IconButton, RootRef, withStyles } from '@material-ui/core';
+import { TextField, Paper, IconButton, withStyles } from '@material-ui/core';
 import { Delete } from '@material-ui/icons';
 import { DraggableCore } from 'react-draggable';
-import { dragControlAction, dropControlAction, changeTextControlAction, deleteControlAction, setControlBoundsAction } from '../redux/actions';
+import { startDragControlAction, dragControlAction, dropControlAction, changeTextControlAction, deleteControlAction } from '../redux/actions';
 
 const cl = (...classArr) => classArr.join(' ');
 
@@ -12,7 +12,7 @@ const styles = theme => ({
   child: {
     position: 'absolute',
     cursor: 'pointer',
-    width: '100%'
+    // width: '100%'
   },
   text: {
     width: `calc(100% - ${theme.spacing.unit * 2}px)`,
@@ -35,16 +35,25 @@ const styles = theme => ({
     right: 2,
     top: 2
   },
+  dragIndicator: {
+    position: 'absolute',
+    borderRadius: theme.spacing.unit / 2,
+    background: 'red',
+    height: 48,
+    opacity: .1
+  }
 });
 
 class DragControl extends PureComponent {
 
   onStart = (e, context) => {
-
+    const { id, startDragControl } = this.props;
+    startDragControl(id);
   }
 
-  onDrag = (e, { deltaX, deltaY }) => {
+  onDrag = (e, context) => {
     const { id, dragControl } = this.props;
+    const { deltaX, deltaY } = context;
     dragControl(id, deltaX, deltaY);
   }
 
@@ -68,16 +77,8 @@ class DragControl extends PureComponent {
     setInputRef(id, ref);
   }
 
-  setControlBounds = (ref) => {
-    const { id, setControlBounds } = this.props;
-    if (ref) {
-      const rect = ref.getBoundingClientRect();
-      setControlBounds(id, rect.left, rect.top, rect.width, rect.height);
-    }
-  }
-
   render() {
-    const { classes, isDragControl, placeholder, text, top, left, width } = this.props;
+    const { classes, isDragControl, placeholder, text, top, left, width, dropLeft, dropTop, dropWidth, dropHeight } = this.props;
     return (
       <div>
         {
@@ -89,17 +90,15 @@ class DragControl extends PureComponent {
                 onStop={this.onStop}
               >
                 <div>
-                  <RootRef rootRef={this.setControlBounds}>
-                    <Paper className={classes.child} style={{ top, left }}>
-                      <TextField
-                        multiline
-                        className={cl(classes.text, 'dragging')}
-                        disabled={isDragControl}
-                        value={text}
-                        placeholder={placeholder}
-                      />
-                    </Paper>
-                  </RootRef>
+                  <div className={classes.dragIndicator} style={{ top: dropTop, left: dropLeft, width: dropWidth, height: dropHeight }}></div>
+                  <Paper className={classes.child} style={{ top, left, width }}>
+                    <TextField
+                      multiline
+                      className={cl(classes.text, 'dragging')}
+                      disabled
+                      value={text}
+                    />
+                  </Paper>
                 </div>
               </DraggableCore>
             ) :
@@ -111,7 +110,6 @@ class DragControl extends PureComponent {
                   inputRef={this.setInputRef}
                   multiline
                   className={classes.text}
-                  disabled={isDragControl}
                   value={text}
                   placeholder={placeholder}
                 />
@@ -132,10 +130,10 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => bindActionCreators({
   changeTextControl: changeTextControlAction,
+  startDragControl: startDragControlAction,
   dragControl: dragControlAction,
   dropControl: dropControlAction,
-  deleteControl: deleteControlAction,
-  setControlBounds: setControlBoundsAction
+  deleteControl: deleteControlAction
 }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(DragControl));

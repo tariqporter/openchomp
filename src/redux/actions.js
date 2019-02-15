@@ -2,6 +2,7 @@ export const ACTION = {
   // TEXT_CHANGE: 'TEXT_CHANGE',
   CHANGE_TEXT_CONTROL: 'CHANGE_TEXT_CONTROL',
   DELETE_CONTROL: 'DELETE_CONTROL',
+  START_DRAG_CONTROL: 'START_DRAG_CONTROL',
   DRAG_CONTROL: 'DRAG_CONTROL',
   DROP_CONTROL: 'DROP_CONTROL',
   SET_CONTAINER_BOUNDS: 'SET_CONTAINER_BOUNDS',
@@ -11,6 +12,11 @@ export const ACTION = {
 
 export const deleteControlAction = id => ({
   type: ACTION.DELETE_CONTROL,
+  id
+});
+
+export const startDragControlAction = id => ({
+  type: ACTION.START_DRAG_CONTROL,
   id
 });
 

@@ -9,15 +9,17 @@ const cl = (...classArr) => classArr.join(' ');
 
 const styles = theme => ({
   container: {
-    background: '#ccc',
-    minHeight: 450,
-    padding: theme.spacing.unit
-  },
-  innerContainer: {
+    background: '#f7f7f7',
+    height: '100vw',
+    // minHeight: 450,
     position: 'relative',
+    // padding: theme.spacing.unit
   },
+  // innerContainer: {
+  //   position: 'relative',
+  // },
   left: {
-    background: '#ddd'
+    background: '#f9f9f9'
   }
 });
 
@@ -58,13 +60,11 @@ class ContentCreator extends PureComponent {
           </Grid>
           <Grid item xs={4}>
             <div className={classes.container} ref={this.setControlsContainerBounds}>
-              <div className={classes.innerContainer}>
-                {
-                  controls.map(control => (
-                    <DragControl key={control.id} {...control} setInputRef={this.setInputRef} />
-                  ))
-                }
-              </div>
+              {
+                controls.map(control => (
+                  <DragControl key={control.id} {...control} setInputRef={this.setInputRef} />
+                ))
+              }
             </div>
           </Grid>
         </Grid>

@@ -1,6 +1,21 @@
+const padding = 8;
+
 export default {
   controls: [
-    { id: 0, left: 0, top: 0, width: null, zIndex: 1, isDragControl: true, text: 'Text Block', placeholder: '' }
+    {
+      id: 0,
+      left: padding,
+      top: padding,
+      width: null,
+      dropLeft: 0,
+      dropTop: 0,
+      dropWidth: null,
+      zIndex: 1,
+      isDragControl: true,
+      isDragging: false,
+      text: 'Text Block',
+      placeholder: ''
+    }
   ],
   containerBounds: {
     left: 0,
@@ -14,7 +29,5 @@ export default {
     width: 0,
     height: 0
   },
-  controlsBounds: {
-    
-  }
+  padding
 };
