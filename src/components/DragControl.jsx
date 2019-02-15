@@ -43,26 +43,24 @@ class DragControl extends PureComponent {
 
   }
 
-  onDrag = (e, context) => {
-    const { id } = this.props;
-    const { deltaX, deltaY } = context;
-    this.props.dragControl(id, deltaX, deltaY);
+  onDrag = (e, { deltaX, deltaY }) => {
+    const { id, dragControl } = this.props;
+    dragControl(id, deltaX, deltaY);
   }
 
   onStop = (e, context) => {
-    const { id } = this.props;
-    this.props.dropControl(id);
-
+    const { id, dropControl } = this.props;
+    dropControl(id);
   }
 
   changeTextControl = (e) => {
-    const { id } = this.props;
-    this.props.changeTextControl(id, e.target.value);
+    const { id, changeTextControl } = this.props;
+    changeTextControl(id, e.target.value);
   }
 
   deleteControl = () => {
-    const { id } = this.props;
-    this.props.deleteControl(id);
+    const { id, deleteControl } = this.props;
+    deleteControl(id);
   }
 
   setInputRef = (ref) => {

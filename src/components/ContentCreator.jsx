@@ -43,8 +43,9 @@ class ContentCreator extends PureComponent {
 
   setInputRef = (id, ref) => {
     this.inputRefs[id] = ref;
-    // console.log(this.inputRefs);
-    ref.focus();
+    if (ref) {
+      ref.focus();
+    }
   }
 
   render() {
