@@ -57,8 +57,8 @@ class ContentCreator extends PureComponent {
             <div className={cl(classes.container, classes.left)} ref={this.setContainerBounds}></div>
           </Grid>
           <Grid item xs={4}>
-            <div className={classes.container}>
-              <div className={classes.innerContainer} ref={this.setControlsContainerBounds}>
+            <div className={classes.container} ref={this.setControlsContainerBounds}>
+              <div className={classes.innerContainer}>
                 {
                   controls.map(control => (
                     <DragControl key={control.id} {...control} setInputRef={this.setInputRef} />

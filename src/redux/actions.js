@@ -5,7 +5,8 @@ export const ACTION = {
   DRAG_CONTROL: 'DRAG_CONTROL',
   DROP_CONTROL: 'DROP_CONTROL',
   SET_CONTAINER_BOUNDS: 'SET_CONTAINER_BOUNDS',
-  SET_CONTROLS_CONTAINER_BOUNDS: 'SET_CONTROLS_CONTAINER_BOUNDS'
+  SET_CONTROLS_CONTAINER_BOUNDS: 'SET_CONTROLS_CONTAINER_BOUNDS',
+  SET_CONTROL_BOUNDS: 'SET_CONTROL_BOUNDS'
 };
 
 export const deleteControlAction = id => ({
@@ -41,6 +42,15 @@ export const setContainerBoundsAction = (left, top, width, height) => ({
 
 export const setControlsContainerBoundsAction = (left, top, width, height) => ({
   type: ACTION.SET_CONTROLS_CONTAINER_BOUNDS,
+  left,
+  top,
+  width,
+  height
+});
+
+export const setControlBoundsAction = (id, left, top, width, height) => ({
+  type: ACTION.SET_CONTROL_BOUNDS,
+  id,
   left,
   top,
   width,

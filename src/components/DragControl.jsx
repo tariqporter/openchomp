@@ -1,10 +1,10 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { TextField, Paper, IconButton, withStyles } from '@material-ui/core';
+import { TextField, Paper, IconButton, RootRef, withStyles } from '@material-ui/core';
 import { Delete } from '@material-ui/icons';
 import { DraggableCore } from 'react-draggable';
-import { dragControlAction, dropControlAction, changeTextControlAction, deleteControlAction } from '../redux/actions';
+import { dragControlAction, dropControlAction, changeTextControlAction, deleteControlAction, setControlBoundsAction } from '../redux/actions';
 
 const cl = (...classArr) => classArr.join(' ');
 
@@ -68,6 +68,14 @@ class DragControl extends PureComponent {
     setInputRef(id, ref);
   }
 
+  setControlBounds = (ref) => {
+    const { id, setControlBounds } = this.props;
+    if (ref) {
+      const rect = ref.getBoundingClientRect();
+      setControlBounds(id, rect.left, rect.top, rect.width, rect.height);
+    }
+  }
+
   render() {
     const { classes, isDragControl, placeholder, text, top, left, width } = this.props;
     return (
@@ -80,15 +88,19 @@ class DragControl extends PureComponent {
                 onDrag={this.onDrag}
                 onStop={this.onStop}
               >
-                <Paper className={classes.child} style={{ top, left }}>
-                  <TextField
-                    multiline
-                    className={cl(classes.text, 'dragging')}
-                    disabled={isDragControl}
-                    value={text}
-                    placeholder={placeholder}
-                  />
-                </Paper>
+                <div>
+                  <RootRef rootRef={this.setControlBounds}>
+                    <Paper className={classes.child} style={{ top, left }}>
+                      <TextField
+                        multiline
+                        className={cl(classes.text, 'dragging')}
+                        disabled={isDragControl}
+                        value={text}
+                        placeholder={placeholder}
+                      />
+                    </Paper>
+                  </RootRef>
+                </div>
               </DraggableCore>
             ) :
             (
@@ -122,7 +134,8 @@ const mapDispatchToProps = dispatch => bindActionCreators({
   changeTextControl: changeTextControlAction,
   dragControl: dragControlAction,
   dropControl: dropControlAction,
-  deleteControl: deleteControlAction
+  deleteControl: deleteControlAction,
+  setControlBounds: setControlBoundsAction
 }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(DragControl));
