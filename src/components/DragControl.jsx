@@ -52,6 +52,7 @@ class DragControl extends PureComponent {
   onStop = (e, context) => {
     const { id } = this.props;
     this.props.dropControl(id);
+
   }
 
   changeTextControl = (e) => {
@@ -62,6 +63,11 @@ class DragControl extends PureComponent {
   deleteControl = () => {
     const { id } = this.props;
     this.props.deleteControl(id);
+  }
+
+  setInputRef = (ref) => {
+    const { id, setInputRef } = this.props;
+    setInputRef(id, ref);
   }
 
   render() {
@@ -92,6 +98,7 @@ class DragControl extends PureComponent {
                 <div className={classes.dragBar}></div>
                 <TextField
                   onChange={this.changeTextControl}
+                  inputRef={this.setInputRef}
                   multiline
                   className={classes.text}
                   disabled={isDragControl}

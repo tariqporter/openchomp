@@ -22,18 +22,29 @@ const styles = theme => ({
 });
 
 class ContentCreator extends PureComponent {
-  setContainer = (ref) => {
+  constructor(props) {
+    super(props);
+    this.inputRefs = {};
+  }
+
+  setContainerBounds = (ref) => {
     if (ref) {
       const rect = ref.getBoundingClientRect();
       this.props.setContainerBounds(rect.left, rect.top, rect.width, rect.height);
     }
   }
 
-  setControlsContainer = (ref) => {
+  setControlsContainerBounds = (ref) => {
     if (ref) {
       const rect = ref.getBoundingClientRect();
       this.props.setControlsContainerBounds(rect.left, rect.top, rect.width, rect.height);
     }
+  }
+
+  setInputRef = (id, ref) => {
+    this.inputRefs[id] = ref;
+    // console.log(this.inputRefs);
+    ref.focus();
   }
 
   render() {
@@ -42,14 +53,14 @@ class ContentCreator extends PureComponent {
       <div>
         <Grid container>
           <Grid item xs={8}>
-            <div className={cl(classes.container, classes.left)} ref={this.setContainer}></div>
+            <div className={cl(classes.container, classes.left)} ref={this.setContainerBounds}></div>
           </Grid>
           <Grid item xs={4}>
             <div className={classes.container}>
-              <div className={classes.innerContainer} ref={this.setControlsContainer}>
+              <div className={classes.innerContainer} ref={this.setControlsContainerBounds}>
                 {
                   controls.map(control => (
-                    <DragControl key={control.id} {...control} />
+                    <DragControl key={control.id} {...control} setInputRef={this.setInputRef} />
                   ))
                 }
               </div>

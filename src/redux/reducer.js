@@ -27,7 +27,7 @@ export default (state = initialState, action) => {
     case ACTION.DROP_CONTROL: {
       const control = state.controls.find(x => x.id === action.id);
       const controls = state.controls.filter(x => x.id !== action.id);
-      controls.push({ ...control, isDragControl: false, left: state.containerBounds.left - state.controlsContainerBounds.left, width: state.containerBounds.width });
+      controls.push({ ...control, isDragControl: false, left: state.containerBounds.left - state.controlsContainerBounds.left, width: state.containerBounds.width, text: '', placeholder: 'Type text here' });
       controls.push(getDefaultControl());
       return { ...state, controls };
     }
