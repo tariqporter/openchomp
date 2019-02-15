@@ -29,9 +29,10 @@ export default (state = initialState, action) => {
       const controls = state.controls.filter(x => x.id !== action.id);
       // console.log(state.containerBounds.left, state.controlsContainerBounds.left, state.controlsBounds.left, state.controlsContainerBounds.left)
       const left = state.containerBounds.left - state.controlsContainerBounds.left - state.controlsBounds[action.id].left + state.controlsContainerBounds.left;
-      controls.push({ ...control, isDragControl: false, left, width: state.containerBounds.width, text: '', placeholder: 'Type text here' });
+      const top = state.containerBounds.top - state.controlsBounds[action.id].top;
+      controls.push({ ...control, isDragControl: false, left, top, width: state.containerBounds.width, text: '', placeholder: 'Type text here' });
       controls.push(getDefaultControl());
-      // console.log(state, controls);
+      console.log(state, controls);
       return { ...state, controls };
     }
     case ACTION.SET_CONTAINER_BOUNDS: {
