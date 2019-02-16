@@ -1,6 +1,6 @@
 import initialState from './inititalState';
 import { ACTION } from './actions';
-import { getDropControls, controlHeight } from './control.functions';
+import { getDropControls, controlHeight, getDragControls } from './control.functions';
 
 export default (state = initialState, action) => {
   switch (action.type) {
@@ -21,14 +21,7 @@ export default (state = initialState, action) => {
       return { ...state, controls };
     }
     case ACTION.DRAG_CONTROL: {
-      const control = state.controls.find(x => x.id === action.id);
-      const controls = state.controls.filter(x => x.id !== action.id);
-      const top = control.top + action.deltaY;
-      const dropWidth = state.containerBounds.width - (2 * state.padding)
-      const dropLeft = state.containerBounds.left - state.controlsContainerBounds.left + state.padding;
-      const dropIndex = Math.floor(top / controlHeight);
-      const dropTop = dropIndex >= 0 ? dropIndex * (controlHeight + state.padding) + state.padding : state.padding;
-      controls.push({ ...control, top, left: control.left + action.deltaX, dropLeft, dropTop, dropWidth, dropHeight: controlHeight });
+      const controls = getDragControls(state, action.id, action.deltaX, action.deltaY);
       return { ...state, controls };
     }
     case ACTION.DROP_CONTROL: {

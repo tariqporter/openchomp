@@ -10,7 +10,6 @@ import classes from './DragControl.module.scss';
 const cl = (...classArr) => classArr.join(' ');
 
 class DragControl extends PureComponent {
-
   onStart = (e, context) => {
     const { id, startDragControl } = this.props;
     startDragControl(id);

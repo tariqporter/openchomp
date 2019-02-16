@@ -1,9 +1,24 @@
 import uuidv4 from 'uuid/v4';
 
+export const padding = 8;
 export const controlHeight = 136;
 
-const getDefaultControl = () => {
-  const defaultControl = { id: uuidv4(), left: 0, top: 0, width: null, zIndex: 1, isDragControl: true, text: 'Text Block', placeholder: '' };
+export const getDefaultControl = () => {
+  const defaultControl = {
+    id: uuidv4(),
+    index: 0,
+    left: padding,
+    top: padding,
+    width: null,
+    dropLeft: 0,
+    dropTop: 0,
+    dropWidth: null,
+    zIndex: 1,
+    isDragControl: true,
+    isDragging: false,
+    text: 'Text Block',
+    placeholder: ''
+  };
   return defaultControl;
 };
 
@@ -26,3 +41,15 @@ export const getDropControls = (state, id) => {
   }
   return controls;
 };
+
+export const getDragControls = (state, id, deltaX, deltaY) => {
+  const control = state.controls.find(x => x.id === id);
+  const controls = state.controls.filter(x => x.id !== id);
+  const top = control.top + deltaY;
+  const dropWidth = state.containerBounds.width - (2 * state.padding)
+  const dropLeft = state.containerBounds.left - state.controlsContainerBounds.left + state.padding;
+  const dropIndex = Math.floor(top / controlHeight);
+  const dropTop = dropIndex >= 0 ? dropIndex * (controlHeight + state.padding) + state.padding : state.padding;
+  controls.push({ ...control, top, left: control.left + deltaX, dropLeft, dropTop, dropWidth, dropHeight: controlHeight });
+  return controls;
+}

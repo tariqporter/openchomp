@@ -1,23 +1,8 @@
-import uuidv4 from 'uuid/v4';
-
-const padding = 8;
+import { getDefaultControl, padding } from './control.functions';
 
 export default {
   controls: [
-    {
-      id: uuidv4(),
-      left: padding,
-      top: padding,
-      width: null,
-      dropLeft: 0,
-      dropTop: 0,
-      dropWidth: null,
-      zIndex: 1,
-      isDragControl: true,
-      isDragging: false,
-      text: 'Text Block',
-      placeholder: ''
-    }
+    getDefaultControl()
   ],
   containerBounds: {
     left: 0,
