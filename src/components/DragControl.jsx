@@ -92,7 +92,7 @@ class DragControl extends PureComponent {
             handle=".draggable-drag-bar"
           >
             <div>
-              <div className={classes.dragIndicator} style={{ top: dropTop, left: dropLeft, width: dropWidth, height: dropHeight }}></div>
+              <div className={classes.dragIndicator} style={{ top: dropTop, left: dropLeft, width: dropWidth, height: dropHeight }} />
               {
                 isDragControl ?
                   (
@@ -108,7 +108,7 @@ class DragControl extends PureComponent {
                   ) :
                   (
                     <Paper className={classes.child} style={{ top, left, width }}>
-                      <div className={cl(classes.dragBar, 'draggable-drag-bar')} ref={this.setDragBarRef}></div>
+                      <div className={cl(classes.dragBar, 'draggable-drag-bar')} ref={this.setDragBarRef} />
                       <TextField
                         onChange={this.changeTextControl}
                         inputRef={this.setInputRef}

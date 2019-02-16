@@ -7,7 +7,7 @@ import '../node_modules/react-resizable/css/styles.css';
 
 const styles = () => ({
   root: {
-    padding: '20px 200px'
+    padding: '20px 0 20px 100px'
   }
 });
 

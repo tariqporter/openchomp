@@ -9,7 +9,7 @@ const cl = (...classArr) => classArr.join(' ');
 
 const styles = theme => ({
   container: {
-    background: '#f7f7f7',
+    background: '#ccc',
     height: '100vh',
     // minHeight: 450,
     position: 'relative',
@@ -19,7 +19,7 @@ const styles = theme => ({
   //   position: 'relative',
   // },
   left: {
-    background: '#f9f9f9'
+    background: '#ddd'
   }
 });
 
@@ -58,7 +58,8 @@ class ContentCreator extends PureComponent {
           <Grid item xs={8}>
             <div className={cl(classes.container, classes.left)} ref={this.setContainerBounds}></div>
           </Grid>
-          <Grid item xs={4}>
+          <Grid item xs={1} />
+          <Grid item xs={3}>
             <div className={classes.container} ref={this.setControlsContainerBounds}>
               {
                 controls.map(control => (
