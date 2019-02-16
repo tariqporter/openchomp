@@ -10,7 +10,7 @@ const cl = (...classArr) => classArr.join(' ');
 const styles = theme => ({
   container: {
     background: '#f7f7f7',
-    height: '100vw',
+    height: '100vh',
     // minHeight: 450,
     position: 'relative',
     // padding: theme.spacing.unit
