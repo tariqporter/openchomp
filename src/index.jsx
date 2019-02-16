@@ -1,5 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { JssProvider } from 'react-jss';
+import { create } from 'jss';
+import { createGenerateClassName, jssPreset } from '@material-ui/core/styles';
 import { Provider } from 'react-redux';
 import { createStore, applyMiddleware, compose } from 'redux';
 import thunk from 'redux-thunk';
@@ -8,14 +11,23 @@ import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 
+const generateClassName = createGenerateClassName();
+const jss = create({
+  ...jssPreset(),
+  // We define a custom insertion point that JSS will look for injecting the styles in the DOM.
+  insertionPoint: 'jss-insertion-point',
+});
+
 const store = createStore(rootReducer, compose(
   applyMiddleware(thunk)
 ));
 
 const Index = () => (
-  <Provider store={store}>
-    <App />
-  </Provider>
+  <JssProvider jss={jss} generateClassName={generateClassName}>
+    <Provider store={store}>
+      <App />
+    </Provider>
+  </JssProvider>
 );
 
 ReactDOM.render(<Index />, document.getElementById('root'));

@@ -1,47 +1,13 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { TextField, Paper, IconButton, withStyles } from '@material-ui/core';
+import { TextField, Paper, IconButton } from '@material-ui/core';
 import { Delete } from '@material-ui/icons';
 import { DraggableCore } from 'react-draggable';
 import { startDragControlAction, dragControlAction, dropControlAction, changeTextControlAction, deleteControlAction } from '../redux/actions';
+import classes from './DragControl.module.scss';
 
 const cl = (...classArr) => classArr.join(' ');
-
-const styles = theme => ({
-  child: {
-    position: 'absolute',
-    cursor: 'pointer'
-  },
-  text: {
-    width: `calc(100% - ${theme.spacing.unit * 2}px)`,
-    transition: "all .3s",
-    margin: theme.spacing.unit,
-    minHeight: 100,
-    "&.dragging": {
-      minHeight: 20,
-      "& input,textarea": {
-        cursor: 'pointer'
-      }
-    }
-  },
-  dragBar: {
-    height: 20,
-    background: '#eee'
-  },
-  deleteButton: {
-    position: 'absolute',
-    right: 2,
-    top: 2
-  },
-  dragIndicator: {
-    position: 'absolute',
-    borderRadius: theme.spacing.unit / 2,
-    background: 'red',
-    height: 48,
-    opacity: .1
-  }
-});
 
 class DragControl extends PureComponent {
 
@@ -81,7 +47,7 @@ class DragControl extends PureComponent {
   }
 
   render() {
-    const { classes, isDragControl, placeholder, text, top, left, width, dropLeft, dropTop, dropWidth, dropHeight } = this.props;
+    const { isDragControl, isDragging, placeholder, text, top, left, width, dropLeft, dropTop, dropWidth, dropHeight } = this.props;
     return (
       <div>
         {
@@ -100,14 +66,14 @@ class DragControl extends PureComponent {
                       <TextField
                         inputRef={this.setInputRef}
                         multiline
-                        className={cl(classes.text, 'dragging')}
+                        className={cl(classes.text, classes.dragging)}
                         disabled
                         value={text}
                       />
                     </Paper>
                   ) :
                   (
-                    <Paper className={classes.child} style={{ top, left, width }}>
+                    <Paper className={cl(classes.child, !isDragging && classes.child_isDragging)} style={{ top, left, width }}>
                       <div className={cl(classes.dragBar, 'draggable-drag-bar')} ref={this.setDragBarRef} />
                       <TextField
                         onChange={this.changeTextControl}
@@ -143,4 +109,4 @@ const mapDispatchToProps = dispatch => bindActionCreators({
   deleteControl: deleteControlAction
 }, dispatch);
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(DragControl));
+export default connect(mapStateToProps, mapDispatchToProps)(DragControl);
