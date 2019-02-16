@@ -45,8 +45,11 @@ export default (state = initialState, action) => {
       const index = Math.floor(control.top / controlHeight);
       const top = index >= 0 ? index * (controlHeight + state.padding) + state.padding : state.padding;
       const width = state.containerBounds.width - (2 * state.padding);
-      controls.push({ ...control, isDragControl: false, left, top, width, text: '', placeholder: 'Type text here' });
-      controls.push({ ...getDefaultControl(), left: state.padding, top: state.padding, width: state.controlsContainerBounds.width - (state.padding * 2) });
+      const text = control.isDragControl ? '' : control.text;
+      controls.push({ ...control, isDragControl: false, isDragging: false, left, top, width, text, placeholder: 'Type text here' });
+      if (control.isDragControl) {
+        controls.push({ ...getDefaultControl(), left: state.padding, top: state.padding, width: state.controlsContainerBounds.width - (state.padding * 2) });
+      }
       return { ...state, controls };
     }
     case ACTION.SET_CONTAINER_BOUNDS: {

@@ -1,9 +1,11 @@
+import uuidv4 from 'uuid/v4';
+
 const padding = 8;
 
 export default {
   controls: [
     {
-      id: 0,
+      id: uuidv4(),
       left: padding,
       top: padding,
       width: null,

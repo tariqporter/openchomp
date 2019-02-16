@@ -11,8 +11,7 @@ const cl = (...classArr) => classArr.join(' ');
 const styles = theme => ({
   child: {
     position: 'absolute',
-    cursor: 'pointer',
-    // width: '100%'
+    cursor: 'pointer'
   },
   text: {
     width: `calc(100% - ${theme.spacing.unit * 2}px)`,
@@ -77,47 +76,55 @@ class DragControl extends PureComponent {
     setInputRef(id, ref);
   }
 
+  setDragBarRef = (ref) => {
+    this.dragBarRef = ref;
+  }
+
   render() {
     const { classes, isDragControl, placeholder, text, top, left, width, dropLeft, dropTop, dropWidth, dropHeight } = this.props;
     return (
       <div>
         {
-          isDragControl ?
-            (
-              <DraggableCore
-                onStart={this.onStart}
-                onDrag={this.onDrag}
-                onStop={this.onStop}
-              >
-                <div>
-                  <div className={classes.dragIndicator} style={{ top: dropTop, left: dropLeft, width: dropWidth, height: dropHeight }}></div>
-                  <Paper className={classes.child} style={{ top, left, width }}>
-                    <TextField
-                      multiline
-                      className={cl(classes.text, 'dragging')}
-                      disabled
-                      value={text}
-                    />
-                  </Paper>
-                </div>
-              </DraggableCore>
-            ) :
-            (
-              <Paper className={classes.child} style={{ top, left, width }}>
-                <div className={classes.dragBar}></div>
-                <TextField
-                  onChange={this.changeTextControl}
-                  inputRef={this.setInputRef}
-                  multiline
-                  className={classes.text}
-                  value={text}
-                  placeholder={placeholder}
-                />
-                <IconButton className={classes.deleteButton} onClick={this.deleteControl}>
-                  <Delete />
-                </IconButton>
-              </Paper>
-            )
+          <DraggableCore
+            onStart={this.onStart}
+            onDrag={this.onDrag}
+            onStop={this.onStop}
+            handle=".draggable-drag-bar"
+          >
+            <div>
+              <div className={classes.dragIndicator} style={{ top: dropTop, left: dropLeft, width: dropWidth, height: dropHeight }}></div>
+              {
+                isDragControl ?
+                  (
+                    <Paper className={cl(classes.child, 'draggable-drag-bar')} style={{ top, left, width }}>
+                      <TextField
+                        inputRef={this.setInputRef}
+                        multiline
+                        className={cl(classes.text, 'dragging')}
+                        disabled
+                        value={text}
+                      />
+                    </Paper>
+                  ) :
+                  (
+                    <Paper className={classes.child} style={{ top, left, width }}>
+                      <div className={cl(classes.dragBar, 'draggable-drag-bar')} ref={this.setDragBarRef}></div>
+                      <TextField
+                        onChange={this.changeTextControl}
+                        inputRef={this.setInputRef}
+                        multiline
+                        className={classes.text}
+                        value={text}
+                        placeholder={placeholder}
+                      />
+                      <IconButton className={classes.deleteButton} onClick={this.deleteControl}>
+                        <Delete />
+                      </IconButton>
+                    </Paper>
+                  )
+              }
+            </div>
+          </DraggableCore>
         }
       </div>
     );
