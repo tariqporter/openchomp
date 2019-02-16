@@ -10,6 +10,7 @@ $padding: 8px;
 }
 
 .text {
+  width: calc(100% - #{$padding * 2});
   transition: all .2s ease-in-out;
   margin: $padding;
   min-height: 100px;
