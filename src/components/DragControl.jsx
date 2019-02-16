@@ -61,18 +61,18 @@ class DragControl extends PureComponent {
               {
                 isDragControl ?
                   (
-                    <Paper className={cl(classes.child, 'draggable-drag-bar')} style={{ top, left, width }}>
+                    <Paper className={cl(classes.draggable, 'draggable-drag-bar')} style={{ top, left, width }}>
                       <TextField
                         inputRef={this.setInputRef}
                         multiline
-                        className={cl(classes.text, classes.dragging)}
+                        className={cl(classes.text, classes.text_dragging)}
                         disabled
                         value={text}
                       />
                     </Paper>
                   ) :
                   (
-                    <Paper className={cl(classes.child, !isDragging && classes.child_isDragging)} style={{ top, left, width }}>
+                    <Paper className={cl(classes.draggable, !isDragging && classes.draggable_dropped)} style={{ top, left, width }}>
                       <div className={cl(classes.dragBar, 'draggable-drag-bar')} ref={this.setDragBarRef} />
                       <TextField
                         onChange={this.changeTextControl}
