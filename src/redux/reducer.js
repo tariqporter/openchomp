@@ -1,6 +1,6 @@
 import initialState from './inititalState';
 import { ACTION } from './actions';
-import { getDropControls, controlHeight, getDragControls } from './control.functions';
+import { getDropControls, getDragControls } from './control.functions';
 
 export default (state = initialState, action) => {
   switch (action.type) {

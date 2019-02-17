@@ -41,12 +41,8 @@ class DragControl extends PureComponent {
     setInputRef(id, ref);
   }
 
-  setDragBarRef = (ref) => {
-    this.dragBarRef = ref;
-  }
-
   render() {
-    const { isDragControl, isDragging, placeholder, text, top, left, width, dropLeft, dropTop, dropWidth, dropHeight } = this.props;
+    const { id, isDragControl, isDragging, placeholder, text, top, left, width, dropLeft, dropTop, dropWidth, dropHeight } = this.props;
     return (
       <div>
         {
@@ -57,7 +53,10 @@ class DragControl extends PureComponent {
             handle=".draggable-drag-bar"
           >
             <div>
-              <div className={classes.dragIndicator} style={{ top: dropTop, left: dropLeft, width: dropWidth, height: dropHeight }} />
+              {
+                isDragging &&
+                <div className={classes.dragIndicator} style={{ top: dropTop, left: dropLeft, width: dropWidth, height: dropHeight }} />
+              }
               {
                 isDragControl ?
                   (
@@ -67,19 +66,19 @@ class DragControl extends PureComponent {
                         multiline
                         className={cl(classes.text, classes.text_dragging)}
                         disabled
-                        value={text}
+                        value={id}
                       />
                     </Paper>
                   ) :
                   (
                     <Paper className={cl(classes.draggable, !isDragging && classes.draggable_dropped)} style={{ top, left, width }}>
-                      <div className={cl(classes.dragBar, 'draggable-drag-bar')} ref={this.setDragBarRef} />
+                      <div className={cl(classes.dragBar, 'draggable-drag-bar')} />
                       <TextField
                         onChange={this.changeTextControl}
                         inputRef={this.setInputRef}
                         multiline
                         className={classes.text}
-                        value={text}
+                        value={id}
                         placeholder={placeholder}
                       />
                       <IconButton className={classes.deleteButton} onClick={this.deleteControl}>
