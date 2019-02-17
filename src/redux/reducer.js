@@ -1,11 +1,11 @@
 import initialState from './inititalState';
 import { ACTION } from './actions';
-import { getDropControls, getDragControls } from './control.functions';
+import { getDropControls, getDragControls, getDeleteControls } from './control.functions';
 
 export default (state = initialState, action) => {
   switch (action.type) {
     case ACTION.DELETE_CONTROL: {
-      const controls = state.controls.filter(x => x.id !== action.id);
+      const controls = getDeleteControls(state, action.id);
       return { ...state, controls };
     }
     case ACTION.CHANGE_TEXT_CONTROL: {

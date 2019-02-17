@@ -27,11 +27,26 @@ const getDropControl = () => {
   return dropControl;
 };
 
+export const getDeleteControls = (state, id) => {
+  const controls = state.controls.filter(x => x.id !== id);
+  let newIndex = 0;
+  controls.forEach(control1 => {
+    if (!control1.isDragControl) {
+      control1.index = newIndex;
+      control1.top = newIndex * (controlHeight + state.padding) + state.padding;
+      newIndex++;
+    }
+  });
+  return controls;
+};
+
 export const getDropControls = (state, id) => {
   const control = state.controls.find(x => x.id === id);
   const controls = state.controls.filter(x => x.id !== id);
   const left = state.containerBounds.left - state.controlsContainerBounds.left + state.padding;
-  const index = Math.floor(control.top / controlHeight);
+  let index = Math.floor(control.top / controlHeight);
+  if (index < 0) index = 0;
+  else if (index > controls.length) index = controls.length;
   const top = index * (controlHeight + state.padding) + state.padding;
   const width = state.containerBounds.width - (2 * state.padding);
   const text = control.isDragControl ? '' : control.text;
@@ -48,8 +63,10 @@ export const getDragControls = (state, id, deltaX, deltaY) => {
   const top = control.top + deltaY;
   const dropWidth = state.containerBounds.width - (2 * state.padding)
   const dropLeft = state.containerBounds.left - state.controlsContainerBounds.left + state.padding;
-  const dropIndex = Math.floor(top / controlHeight);
-  const dropTop = dropIndex * (controlHeight + state.padding) + state.padding;
+  let dropIndex = Math.floor(top / controlHeight);
+  if (dropIndex < 0) dropIndex = 0;
+  else if (dropIndex > controls.length) dropIndex = controls.length;
+  const dropTop = dropIndex  * (controlHeight + state.padding) + state.padding;
   const sameIndex = controls.some(x => x.index === dropIndex && !x.isDragging);
   if (sameIndex) {
     let newIndex = 0;
