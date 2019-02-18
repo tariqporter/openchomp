@@ -13,7 +13,6 @@ export const getDefaultControl = () => {
     dropLeft: 0,
     dropTop: 0,
     dropWidth: null,
-    zIndex: 1,
     isDragControl: true,
     isDragging: false,
     text: 'Text Block',
