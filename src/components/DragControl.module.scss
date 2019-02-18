@@ -3,8 +3,10 @@ $padding: 8px;
 .draggable {
   position: absolute;
   cursor: pointer;
+  z-index: 2;
   
   &_dropped {
+    z-index: 1;
     transition: all .2s ease-in-out;
   }
 }
