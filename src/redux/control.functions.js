@@ -66,7 +66,9 @@ export const getDropControls = (state, id) => {
 };
 
 export const getDragControls = (state, id, deltaX, deltaY) => {
+
   const control = state.controls.find(x => x.id === id);
+  console.log(state, control)
   const controls = state.controls.filter(x => x.id !== id);
   const top = control.top + deltaY;
   const dropWidth = state.containerBounds.width - (2 * state.padding)
@@ -76,18 +78,15 @@ export const getDragControls = (state, id, deltaX, deltaY) => {
   const sameIndex = controls.some(x => x.index === dropIndex && !x.isDragging);
   if (sameIndex) {
     let newIndex = 0;
-    controls.forEach(control1 => {
-      if (newIndex === dropIndex) {
+    controls.forEach((c, i) => {
+      if (newIndex === dropIndex) newIndex++;
+      if (!controls[i].isDragControl) {
+        controls[i].index = newIndex;
+        controls[i].top =  newIndex * (controlHeight + state.padding) + state.padding;
         newIndex++;
       }
-
-      if (!control1.isDragControl) {
-        control1.index = newIndex;
-        control1.top = newIndex * (controlHeight + state.padding) + state.padding;
-      }
-      newIndex++;
     });
   }
-  controls.splice(dropIndex, 0, { ...control, top, left: control.left + deltaX, dropLeft, dropTop, dropWidth, dropHeight: controlHeight });
+  controls.splice(dropIndex, 0, { ...control, index: dropIndex, top, left: control.left + deltaX, dropLeft, dropTop, dropWidth, dropHeight: controlHeight });
   return controls;
 };

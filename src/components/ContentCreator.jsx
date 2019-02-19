@@ -7,21 +7,16 @@ import DragControl from './DragControl';
 
 const cl = (...classArr) => classArr.join(' ');
 
-const styles = theme => ({
+const styles = {
   container: {
     background: '#ccc',
     height: '100vh',
-    // minHeight: 450,
     position: 'relative',
-    // padding: theme.spacing.unit
   },
-  // innerContainer: {
-  //   position: 'relative',
-  // },
   left: {
     background: '#ddd'
   }
-});
+};
 
 class ContentCreator extends PureComponent {
   constructor(props) {
@@ -56,7 +51,7 @@ class ContentCreator extends PureComponent {
       <div>
         <Grid container>
           <Grid item xs={8}>
-            <div className={cl(classes.container, classes.left)} ref={this.setContainerBounds}></div>
+            <div className={cl(classes.container, classes.left)} ref={this.setContainerBounds} />
           </Grid>
           <Grid item xs={1} />
           <Grid item xs={3}>
