@@ -71,7 +71,7 @@ class DragControl extends PureComponent {
                     </Paper>
                   ) :
                   (
-                    <Paper className={cl(classes.draggable, !isDragging && classes.draggable_dropped)} style={{ top, left, width }}>
+                    <Paper className={cl(classes.draggable, classes.draggable_dropped)} style={{ top, left, width }}>
                       <div className={cl(classes.dragBar, 'draggable-drag-bar')} />
                       <TextField
                         onChange={this.changeTextControl}

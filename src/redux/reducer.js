@@ -3,6 +3,7 @@ import { ACTION } from './actions';
 import { getDropControls, getDragControls, getDeleteControls } from './control.functions';
 
 export default (state = initialState, action) => {
+  // console.log(action);
   switch (action.type) {
     case ACTION.DELETE_CONTROL: {
       const controls = getDeleteControls(state, action.id);
@@ -32,7 +33,12 @@ export default (state = initialState, action) => {
       return { ...state, containerBounds: { ...state.containerBounds, left: action.left, top: action.top, width: action.width, height: action.height } };
     }
     case ACTION.SET_CONTROLS_CONTAINER_BOUNDS: {
-      const controls = state.controls.map(x => ({ ...x, width: action.width - (2 * state.padding) }));
+      const controls = [...state.controls];
+      controls.forEach(c => {
+        if (c.isDragControl) {
+          c.width = action.width - (2 * state.padding);
+        }
+      });
       return { ...state, controls, controlsContainerBounds: { ...state.controlsContainerBounds, left: action.left, top: action.top, width: action.width, height: action.height } };
     }
     default: {

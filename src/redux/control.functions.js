@@ -26,9 +26,10 @@ const getIndex = (controls, top) => {
   let index = Math.floor(top / controlHeight);
   if (index < 0) {
     index = 0;
-  } else if (index > droppedControls.length) {
-    index = droppedControls.length;
   }
+  //  else if (index > droppedControls.length) {
+  //   index = droppedControls.length;
+  // }
   return index;
 };
 
@@ -66,9 +67,8 @@ export const getDropControls = (state, id) => {
 };
 
 export const getDragControls = (state, id, deltaX, deltaY) => {
-
   const control = state.controls.find(x => x.id === id);
-  console.log(state, control)
+  // console.log(state, control)
   const controls = state.controls.filter(x => x.id !== id);
   const top = control.top + deltaY;
   const dropWidth = state.containerBounds.width - (2 * state.padding)
