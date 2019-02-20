@@ -13,6 +13,7 @@ export const getDefaultControl = () => {
     dropLeft: 0,
     dropTop: 0,
     dropWidth: null,
+    dropHeight: null,
     isDragControl: true,
     isDragging: false,
     text: 'Text Block',
@@ -37,10 +38,8 @@ const getDropControl = () => {
   return dropControl;
 };
 
-export const getDeleteControls = (state, id) => {
-  const controls = { ...state.controls };
-  delete controls[id];
-
+const orderControls = (controls1, dropIndex, padding) => {
+  const controls = { ...controls1 };
   let newIndex = 0;
   const controlsArr = Object.values(controls);
   const changedIds = [];
@@ -48,10 +47,18 @@ export const getDeleteControls = (state, id) => {
     const ordered = controlsArr.filter(x => !x.isDragControl && !x.isDragging && !changedIds.includes(x.id)).sort((a, b) => a.index - b.index);
     if (!ordered.length) break;
     const lowestId = ordered[0].id;
+    if (newIndex === dropIndex) newIndex++;
     controls[lowestId] = { ...controls[lowestId], index: newIndex, top: newIndex * (controlHeight + padding) + padding };
     changedIds.push(lowestId);
     newIndex++;
   }
+  return controls;
+};
+
+export const getDeleteControls = (state, id) => {
+  let controls = { ...state.controls };
+  delete controls[id];
+  controls = orderControls(controls, null, state.padding);
   return controls;
 };
 
@@ -63,41 +70,40 @@ export const getDropControls = (state, id) => {
   const top = index * (controlHeight + state.padding) + state.padding;
   const width = state.containerBounds.width - (2 * state.padding);
   const text = control.isDragControl ? '' : control.text;
-  controls[id] = { ...controls[id], ...getDropControl(), index, left, top, width, text };
-  if (control.isDragControl) {
-    const defaultControl = getDefaultControl()
-    controls[defaultControl.id] = { ...defaultControl, left: state.padding, top: state.padding, width: state.controlsContainerBounds.width - (state.padding * 2) };
+
+  if (state.controlsContainerBounds.left + control.left < state.containerBounds.left + state.containerBounds.width) {
+    controls[id] = { ...controls[id], ...getDropControl(), index, top, left, width, text };
+    if (control.isDragControl) {
+      const dc = getDefaultControl()
+      controls[dc.id] = { ...dc, left: state.padding, top: state.padding, width: state.controlsContainerBounds.width - (state.padding * 2) };
+    }
+  } else {
+    const dc = getDefaultControl();
+    controls[id] = { ...controls[id], index: dc.index, top: dc.top, left: dc.left, text: dc.text };
   }
   return controls;
 };
 
-const reorderControls = (controls, dropIndex, padding) => {
-  let newIndex = 0;
-  const controlsArr = Object.values(controls);
-  const sameIndex = controlsArr.some(x => x.index === dropIndex && !x.isDragging);
-  const changedIds = [];
-  if (sameIndex) {
-    while (newIndex < controlsArr.length) {
-      const ordered = controlsArr.filter(x => !x.isDragControl && !x.isDragging && !changedIds.includes(x.id)).sort((a, b) => a.index - b.index);
-      if (!ordered.length) break;
-      const lowestId = ordered[0].id;
-      if (newIndex === dropIndex) newIndex++;
-      controls[lowestId] = { ...controls[lowestId], index: newIndex, top: newIndex * (controlHeight + padding) + padding };
-      changedIds.push(lowestId);
-      newIndex++;
-    }
-  }
-};
-
 export const getDragControls = (state, id, deltaX, deltaY) => {
-  const controls = { ...state.controls };
+  let controls = { ...state.controls };
   const control = controls[id];
   const top = control.top + deltaY;
+  const left = control.left + deltaX;
   const dropWidth = state.containerBounds.width - (2 * state.padding)
   const dropLeft = state.containerBounds.left - state.controlsContainerBounds.left + state.padding;
   const dropIndex = getIndex(controls, top);
   const dropTop = dropIndex * (controlHeight + state.padding) + state.padding;
-  controls[id] = { ...controls[id], index: dropIndex, top, left: control.left + deltaX, dropLeft, dropTop, dropWidth, dropHeight: controlHeight };
-  reorderControls(controls, dropIndex, state.padding);
+
+  if (state.controlsContainerBounds.left + control.left < state.containerBounds.left + state.containerBounds.width) {
+    controls[id] = { ...controls[id], index: dropIndex, top, left, dropLeft, dropTop, dropWidth, dropHeight: controlHeight };
+    const sameIndex = Object.values(controls).some(x => x.index === dropIndex && !x.isDragging);
+    if (sameIndex) {
+      controls = orderControls(controls, dropIndex, state.padding);
+    }
+  } else {
+    const dc = getDefaultControl();
+    controls[id] = { ...controls[id], index: dc.index, top, left, dropLeft: dc.dropLeft, dropTop: dc.dropTop, dropWidth: dc.dropWidth, dropHeight: dc.dropHeight };
+    controls = orderControls(controls, null, state.padding);
+  }
   return controls;
 };
