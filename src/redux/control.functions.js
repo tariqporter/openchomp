@@ -71,14 +71,14 @@ export const getDropControls = (state, id) => {
   const width = state.containerBounds.width - (2 * state.padding);
   const text = control.isDragControl ? '' : control.text;
 
+  const dc = getDefaultControl();
   if (!control.isDragControl || state.controlsContainerBounds.left + control.left < state.containerBounds.left + state.containerBounds.width) {
     controls[id] = { ...controls[id], ...getDropControl(), index, top, left, width, text };
+    // Control dropped into container. Create new one
     if (control.isDragControl) {
-      const dc = getDefaultControl()
       controls[dc.id] = { ...dc, left: state.padding, top: state.padding, width: state.controlsContainerBounds.width - (state.padding * 2) };
     }
   } else {
-    const dc = getDefaultControl();
     controls[id] = { ...controls[id], index: dc.index, top: dc.top, left: dc.left, text: dc.text };
   }
   return controls;
