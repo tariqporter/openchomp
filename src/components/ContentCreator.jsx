@@ -1,9 +1,10 @@
-import React, { PureComponent } from 'react';
+import React, { PureComponent, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { Grid, withStyles } from '@material-ui/core';
+import { Grid, Paper, Tabs, Tab, withStyles, Tooltip } from '@material-ui/core';
 import { setContainerBoundsAction, setControlsContainerBoundsAction } from '../redux/actions';
 import DragControl from './DragControl';
+import { Edit, Photo } from '@material-ui/icons';
 
 const cl = (...classArr) => classArr.join(' ');
 
@@ -22,6 +23,10 @@ class ContentCreator extends PureComponent {
   constructor(props) {
     super(props);
     this.inputRefs = {};
+
+    this.state = {
+      tabIndex: 0
+    };
   }
 
   setContainerBounds = (ref) => {
@@ -45,24 +50,45 @@ class ContentCreator extends PureComponent {
     }
   }
 
+  changeTab = (e, tabIndex) => {
+    this.setState(state => ({ tabIndex }));
+  }
+
   render() {
+    const { tabIndex } = this.state;
     const { classes, controls } = this.props;
     return (
       <div>
         <Grid container>
           <Grid item xs={8}>
-            <div className={cl(classes.container, classes.left)} ref={this.setContainerBounds} />
-          </Grid>
-          <Grid item xs={1} />
-          <Grid item xs={3}>
-            <div className={classes.container} ref={this.setControlsContainerBounds}>
+            <Paper>
+              <Tabs value={tabIndex} onChange={this.changeTab}>
+                <Tab icon={<Tooltip title="Edit" aria-label="Edit"><Edit /></Tooltip>} />
+                <Tab icon={<Tooltip title="Preview" aria-label="Preview"><Photo /></Tooltip>} />
+              </Tabs>
               {
-                Object.values(controls).map(control => (
-                  <DragControl key={control.id} {...control} setInputRef={this.setInputRef} />
-                ))
+                tabIndex === 0 &&
+                <div className={cl(classes.container, classes.left)} ref={this.setContainerBounds} />
               }
-            </div>
+            </Paper>
           </Grid>
+          {
+            tabIndex === 0 &&
+            <Fragment>
+              <Grid item xs={1} />
+              <Grid item xs={3}>
+                <Paper>
+                  <div className={classes.container} ref={this.setControlsContainerBounds}>
+                    {
+                      Object.values(controls).map(control => (
+                        <DragControl key={control.id} {...control} setInputRef={this.setInputRef} />
+                      ))
+                    }
+                  </div>
+                </Paper>
+              </Grid>
+            </Fragment>
+          }
         </Grid>
       </div>
     );
