@@ -71,7 +71,7 @@ export const getDropControls = (state, id) => {
   const width = state.containerBounds.width - (2 * state.padding);
   const text = control.isDragControl ? '' : control.text;
 
-  if (state.controlsContainerBounds.left + control.left < state.containerBounds.left + state.containerBounds.width) {
+  if (!control.isDragControl || state.controlsContainerBounds.left + control.left < state.containerBounds.left + state.containerBounds.width) {
     controls[id] = { ...controls[id], ...getDropControl(), index, top, left, width, text };
     if (control.isDragControl) {
       const dc = getDefaultControl()
@@ -94,7 +94,7 @@ export const getDragControls = (state, id, deltaX, deltaY) => {
   const dropIndex = getIndex(controls, top);
   const dropTop = dropIndex * (controlHeight + state.padding) + state.padding;
 
-  if (state.controlsContainerBounds.left + control.left < state.containerBounds.left + state.containerBounds.width) {
+  if (!control.isDragControl || state.controlsContainerBounds.left + control.left < state.containerBounds.left + state.containerBounds.width) {
     controls[id] = { ...controls[id], index: dropIndex, top, left, dropLeft, dropTop, dropWidth, dropHeight: controlHeight };
     const sameIndex = Object.values(controls).some(x => x.index === dropIndex && !x.isDragging);
     if (sameIndex) {
