@@ -1,23 +1,25 @@
 import { getDefaultControl, padding } from './control.functions';
 
+const defaultControl = getDefaultControl();
+
 export default {
-  controls: [
-    // getDefaultControl()
-    {
-      dropHeight: 136,
-      dropLeft: -1825.75,
-      dropTop: 8,
-      dropWidth: 1614,
-      id: "d905801c-913f-492e-8d55-dc3b8543d99a",
-      index: 0,
-      isDragControl: false,
-      isDragging: false,
-      left: -1825.75,
-      placeholder: "Type text here",
-      text: "",
-      top: 8,
-      width: 1614,
-    }, 
+  controls: {
+    [defaultControl.id]: defaultControl
+    // {
+    //   dropHeight: 136,
+    //   dropLeft: -1825.75,
+    //   dropTop: 8,
+    //   dropWidth: 1614,
+    //   id: "d905801c-913f-492e-8d55-dc3b8543d99a",
+    //   index: 0,
+    //   isDragControl: false,
+    //   isDragging: false,
+    //   left: -1825.75,
+    //   placeholder: "Type text here",
+    //   text: "",
+    //   top: 8,
+    //   width: 1614,
+    // }, 
     // {
     //   dropHeight: 136,
     //   dropLeft: -1825.75,
@@ -47,7 +49,7 @@ export default {
     //   top: 8,
     //   width: 595.25,
     // }
-  ],
+  },
   containerBounds: {
     left: 0,
     top: 0,

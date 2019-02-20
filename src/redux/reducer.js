@@ -10,15 +10,13 @@ export default (state = initialState, action) => {
       return { ...state, controls };
     }
     case ACTION.CHANGE_TEXT_CONTROL: {
-      const control = state.controls.find(x => x.id === action.id);
-      const controls = state.controls.filter(x => x.id !== action.id);
-      controls.push({ ...control, text: action.text });
+      const controls = { ...state.controls };
+      controls[action.id] = { ...controls[action.id], text: action.text };
       return { ...state, controls };
     }
     case ACTION.START_DRAG_CONTROL: {
-      const control = state.controls.find(x => x.id === action.id);
-      const controls = state.controls.filter(x => x.id !== action.id);
-      controls.push({ ...control, isDragging: true });
+      const controls = { ...state.controls };
+      controls[action.id] = { ...controls[action.id], isDragging: true };
       return { ...state, controls };
     }
     case ACTION.DRAG_CONTROL: {
@@ -33,10 +31,10 @@ export default (state = initialState, action) => {
       return { ...state, containerBounds: { ...state.containerBounds, left: action.left, top: action.top, width: action.width, height: action.height } };
     }
     case ACTION.SET_CONTROLS_CONTAINER_BOUNDS: {
-      const controls = [...state.controls];
-      controls.forEach(c => {
+      const controls = { ...state.controls };
+      Object.values(controls).forEach(c => {
         if (c.isDragControl) {
-          c.width = action.width - (2 * state.padding);
+          controls[c.id] = { ...controls[c.id], width: action.width - (2 * state.padding) };
         }
       });
       return { ...state, controls, controlsContainerBounds: { ...state.controlsContainerBounds, left: action.left, top: action.top, width: action.width, height: action.height } };

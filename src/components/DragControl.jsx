@@ -66,19 +66,19 @@ class DragControl extends PureComponent {
                         multiline
                         className={cl(classes.text, classes.text_dragging)}
                         disabled
-                        value={id}
+                        value={text}
                       />
                     </Paper>
                   ) :
                   (
-                    <Paper className={cl(classes.draggable, classes.draggable_dropped)} style={{ top, left, width }}>
+                    <Paper className={cl(classes.draggable, !isDragging && classes.draggable_dropped)} style={{ top, left, width }}>
                       <div className={cl(classes.dragBar, 'draggable-drag-bar')} />
                       <TextField
                         onChange={this.changeTextControl}
                         inputRef={this.setInputRef}
                         multiline
                         className={classes.text}
-                        value={id}
+                        value={text}
                         placeholder={placeholder}
                       />
                       <IconButton className={classes.deleteButton} onClick={this.deleteControl}>
