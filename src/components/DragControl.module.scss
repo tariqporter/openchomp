@@ -7,14 +7,14 @@ $padding: 8px;
   
   &_dropped {
     z-index: 1;
-    transition: all 2s ease-in;
+    transition: all .2s ease-in;
     transition-property: left, top, width, height;
   }
 }
 
 .text {
   width: calc(100% - #{$padding * 2});
-  // transition: min-height .2s ease-in-out;
+  transition: min-height .2s ease-in-out;
   margin: $padding;
   min-height: 100px;
 

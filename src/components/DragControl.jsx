@@ -66,7 +66,7 @@ class DragControl extends PureComponent {
                         multiline
                         className={cl(classes.text, classes.text_dragging)}
                         disabled
-                        value={id}
+                        value={text}
                       />
                     </Paper>
                   ) :
@@ -78,7 +78,7 @@ class DragControl extends PureComponent {
                         inputRef={this.setInputRef}
                         multiline
                         className={classes.text}
-                        value={id}
+                        value={text}
                         placeholder={placeholder}
                       />
                       <IconButton className={classes.deleteButton} onClick={this.deleteControl}>
