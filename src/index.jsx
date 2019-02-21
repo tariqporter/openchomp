@@ -11,6 +11,9 @@ import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 
+const styleNode = document.createComment("jss-insertion-point");
+document.head.insertBefore(styleNode, document.head.firstChild);
+
 const generateClassName = createGenerateClassName();
 const jss = create({
   ...jssPreset(),
