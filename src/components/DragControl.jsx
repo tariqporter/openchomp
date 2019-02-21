@@ -74,7 +74,7 @@ class DragControl extends PureComponent {
                         className={cl(classes.text, classes.text_dragging)}
                         editorState={editorState}
                         onChange={() => { }}
-                        disabled
+                        readOnly
                       />
                     </Paper>
                   ) :
