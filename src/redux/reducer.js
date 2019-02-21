@@ -5,6 +5,9 @@ import { getDropControls, getDragControls, getDeleteControls } from './control.f
 export default (state = initialState, action) => {
   // console.log(action);
   switch (action.type) {
+    case ACTION.CHANGE_TAB: {
+      return { ...state, tabIndex: action.tabIndex };
+    }
     case ACTION.DELETE_CONTROL: {
       const controls = getDeleteControls(state, action.id);
       return { ...state, controls };

@@ -2,7 +2,7 @@ import React, { PureComponent, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Grid, Paper, Tabs, Tab, withStyles, Tooltip } from '@material-ui/core';
-import { setContainerBoundsAction, setControlsContainerBoundsAction } from '../redux/actions';
+import { setContainerBoundsAction, setControlsContainerBoundsAction, changeTabAction } from '../redux/actions';
 import DragControl from './DragControl';
 import { Edit, Photo } from '@material-ui/icons';
 
@@ -23,10 +23,6 @@ class ContentCreator extends PureComponent {
   constructor(props) {
     super(props);
     this.inputRefs = {};
-
-    this.state = {
-      tabIndex: 0
-    };
   }
 
   setContainerBounds = (ref) => {
@@ -51,12 +47,12 @@ class ContentCreator extends PureComponent {
   }
 
   changeTab = (e, tabIndex) => {
-    this.setState(state => ({ tabIndex }));
+    const { changeTab } = this.props;
+    changeTab(tabIndex);
   }
 
   render() {
-    const { tabIndex } = this.state;
-    const { classes, controls } = this.props;
+    const { classes, controls, tabIndex } = this.props;
     return (
       <div>
         <Grid container>
@@ -96,12 +92,14 @@ class ContentCreator extends PureComponent {
 }
 
 const mapStateToProps = state => ({
-  controls: state.controls
+  controls: state.controls,
+  tabIndex: state.tabIndex
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators({
   setContainerBounds: setContainerBoundsAction,
-  setControlsContainerBounds: setControlsContainerBoundsAction
+  setControlsContainerBounds: setControlsContainerBoundsAction,
+  changeTab: changeTabAction
 }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(ContentCreator));

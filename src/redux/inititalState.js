@@ -62,6 +62,7 @@ export default {
     width: 0,
     height: 0
   },
+  tabIndex: 0,
   padding
 };
 
