@@ -17,7 +17,6 @@ export const getDefaultControl = () => {
     dropHeight: null,
     isDragControl: true,
     isDragging: false,
-    text: 'Text Block',
     editorState: EditorState.createWithContent(ContentState.createFromText('Text Block')),
     placeholder: ''
   };
@@ -71,17 +70,17 @@ export const getDropControls = (state, id) => {
   const index = getIndex(controls, control.top);
   const top = index * (controlHeight + state.padding) + state.padding + state.containerBounds.top - state.controlsContainerBounds.top;
   const width = state.containerBounds.width - (2 * state.padding);
-  const text = control.isDragControl ? '' : control.text;
-
   const dc = getDefaultControl();
+  const editorState = control.isDragControl ? EditorState.createEmpty() : dc.editorState;
+
   if (!control.isDragControl || state.controlsContainerBounds.left + control.left < state.containerBounds.left + state.containerBounds.width) {
-    controls[id] = { ...controls[id], ...getDropControl(), index, top, left, width, text };
+    controls[id] = { ...controls[id], ...getDropControl(), index, top, left, width, editorState };
     // Control dropped into container. Create new one
     if (control.isDragControl) {
       controls[dc.id] = { ...dc, left: state.padding, top: state.padding, width: state.controlsContainerBounds.width - (state.padding * 2) };
     }
   } else {
-    controls[id] = { ...controls[id], index: dc.index, top: dc.top, left: dc.left, text: dc.text };
+    controls[id] = { ...controls[id], index: dc.index, top: dc.top, left: dc.left, editorState: dc.editorState };
   }
   return controls;
 };

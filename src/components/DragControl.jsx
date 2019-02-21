@@ -3,7 +3,8 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Paper, IconButton } from '@material-ui/core';
 import { Delete } from '@material-ui/icons';
-import { Editor, EditorState } from 'draft-js';
+// import { Editor } from 'draft-js';
+import DraftEditor from './DraftEditor';
 import { DraggableCore } from 'react-draggable';
 import { startDragControlAction, dragControlAction, dropControlAction, changeTextControlAction, deleteControlAction } from '../redux/actions';
 import classes from './DragControl.module.scss';
@@ -27,9 +28,9 @@ class DragControl extends PureComponent {
     dropControl(id);
   }
 
-  changeTextControl = (e) => {
+  changeTextControl = (editorState) => {
     const { id, changeTextControl } = this.props;
-    changeTextControl(id, e.target.value);
+    changeTextControl(id, editorState);
   }
 
   deleteControl = () => {
@@ -62,14 +63,7 @@ class DragControl extends PureComponent {
                 isDragControl ?
                   (
                     <Paper className={cl(classes.draggable, 'draggable-drag-bar')} style={{ top, left, width }}>
-                      {/* <TextField
-                        inputRef={this.setInputRef}
-                        multiline
-                        className={cl(classes.text, classes.text_dragging)}
-                        disabled
-                        value={text}
-                      /> */}
-                      <Editor
+                      <DraftEditor
                         ref={this.setInputRef}
                         className={cl(classes.text, classes.text_dragging)}
                         editorState={editorState}
@@ -81,14 +75,13 @@ class DragControl extends PureComponent {
                   (
                     <Paper className={cl(classes.draggable, !isDragging && classes.draggable_dropped)} style={{ top, left, width }}>
                       <div className={cl(classes.dragBar, 'draggable-drag-bar')} />
-                      {/* <TextField
+                      <DraftEditor
                         onChange={this.changeTextControl}
-                        inputRef={this.setInputRef}
-                        multiline
+                        ref={this.setInputRef}
                         className={classes.text}
-                        value={text}
+                        editorState={editorState}
                         placeholder={placeholder}
-                      /> */}
+                      />
                       <IconButton className={classes.deleteButton} onClick={this.deleteControl}>
                         <Delete />
                       </IconButton>

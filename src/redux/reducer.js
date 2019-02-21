@@ -14,7 +14,7 @@ export default (state = initialState, action) => {
     }
     case ACTION.CHANGE_TEXT_CONTROL: {
       const controls = { ...state.controls };
-      controls[action.id] = { ...controls[action.id], text: action.text };
+      controls[action.id] = { ...controls[action.id], editorState: action.editorState };
       return { ...state, controls };
     }
     case ACTION.START_DRAG_CONTROL: {

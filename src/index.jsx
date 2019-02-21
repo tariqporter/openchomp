@@ -8,6 +8,7 @@ import { createStore, applyMiddleware, compose } from 'redux';
 import thunk from 'redux-thunk';
 import rootReducer from './redux/reducer';
 import './index.css';
+import 'draft-js/dist/Draft.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 
