@@ -5,6 +5,7 @@ import { Grid, Paper, Tabs, Tab, withStyles, Tooltip } from '@material-ui/core';
 import { setContainerBoundsAction, setControlsContainerBoundsAction, changeTabAction } from '../redux/actions';
 import DragControl from './DragControl';
 import { Edit, Photo } from '@material-ui/icons';
+import ContentPreview from './ContentPreview';
 
 const cl = (...classArr) => classArr.join(' ');
 
@@ -65,6 +66,10 @@ class ContentCreator extends PureComponent {
               {
                 tabIndex === 0 &&
                 <div className={cl(classes.container, classes.left)} ref={this.setContainerBounds} />
+              }
+              {
+                tabIndex === 1 &&
+                <ContentPreview />
               }
             </Paper>
           </Grid>

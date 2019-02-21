@@ -1,4 +1,5 @@
 import uuidv4 from 'uuid/v4';
+import { EditorState } from 'draft-js';
 
 export const padding = 8;
 export const controlHeight = 136;
@@ -17,6 +18,7 @@ export const getDefaultControl = () => {
     isDragControl: true,
     isDragging: false,
     text: 'Text Block',
+    editorState: EditorState.createEmpty(),
     placeholder: ''
   };
   return defaultControl;
