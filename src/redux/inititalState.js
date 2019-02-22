@@ -62,6 +62,7 @@ export default {
     width: 0,
     height: 0
   },
+  previewHtml: '',
   tabIndex: 0,
   padding
 };

@@ -1,12 +1,13 @@
 import initialState from './inititalState';
 import { ACTION } from './actions';
-import { getDropControls, getDragControls, getDeleteControls } from './control.functions';
+import { getDropControls, getDragControls, getDeleteControls, getPreviewHtml } from './control.functions';
 
 export default (state = initialState, action) => {
   // console.log(action);
   switch (action.type) {
     case ACTION.CHANGE_TAB: {
-      return { ...state, tabIndex: action.tabIndex };
+      const previewHtml = getPreviewHtml(state.controls);
+      return { ...state, tabIndex: action.tabIndex, previewHtml };
     }
     case ACTION.DELETE_CONTROL: {
       const controls = getDeleteControls(state, action.id);

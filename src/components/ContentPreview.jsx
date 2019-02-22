@@ -1,32 +1,29 @@
-import React, { PureComponent, Fragment } from 'react';
+import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { withStyles } from '@material-ui/core';
-// import { setContainerBoundsAction, setControlsContainerBoundsAction, changeTabAction } from '../redux/actions';
 
-const cl = (...classArr) => classArr.join(' ');
+// const cl = (...classArr) => classArr.join(' ');
 
 const styles = {
-
+  root: {
+    padding: 8
+  }
 };
 
 class ContentPreview extends PureComponent {
   render() {
-    const { controls } = this.props;
+    const { classes, previewHtml } = this.props;
     return (
-      <div>
-        {
-          Object.values(controls).filter(control => !control.isDragControl).map(control => (
-            <div key={control.id}>{control.text}</div>
-          ))
-        }
+      <div className={classes.root}>
+        <div dangerouslySetInnerHTML={{ __html: previewHtml }} />
       </div>
     );
   }
 }
 
 const mapStateToProps = state => ({
-  controls: state.controls
+  previewHtml: state.previewHtml
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators({
