@@ -1,4 +1,4 @@
-import React, { PureComponent, forwardRef } from 'react';
+import React, { PureComponent } from 'react';
 import Editor from 'draft-js-plugins-editor';
 import createEmojiPlugin from 'draft-js-emoji-plugin';
 import createInlineToolbarPlugin from 'draft-js-inline-toolbar-plugin';
@@ -16,10 +16,10 @@ class DraftEditor extends PureComponent {
   }
 
   render() {
-    const { className, style, forwardedRef, ...props } = this.props;
+    const { className, style, onClick, forwardedRef, ...props } = this.props;
     const { EmojiSuggestions, InlineToolbar, plugins } = this.state;
     return (
-      <div className={className} style={style}>
+      <div className={className} style={style} onClick={onClick}>
         <Editor
           ref={forwardedRef}
           plugins={plugins}
@@ -33,7 +33,3 @@ class DraftEditor extends PureComponent {
 }
 
 export default DraftEditor;
-
-// export default forwardRef((props, ref) => {
-//   return <DraftEditor {...props} forwardedRef={ref} />;
-// });

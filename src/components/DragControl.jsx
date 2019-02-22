@@ -42,6 +42,11 @@ class DragControl extends PureComponent {
     setInputRef(id, ref);
   }
 
+  focus = () => {
+    const { id, focus } = this.props;
+    focus(id);
+  }
+
   render() {
     const { id, isDragControl, isDragging, placeholder, text, editorState, top, left, width, dropLeft, dropTop, dropWidth, dropHeight } = this.props;
     return (
@@ -80,6 +85,7 @@ class DragControl extends PureComponent {
                         className={classes.text}
                         editorState={editorState}
                         placeholder={placeholder}
+                        onClick={this.focus}
                       />
                       <IconButton className={classes.deleteButton} onClick={this.deleteControl}>
                         <Delete />

@@ -47,6 +47,14 @@ class ContentCreator extends PureComponent {
     }
   }
 
+  focus = (id) => {
+    const ref = this.inputRefs[id];
+    console.log(ref);
+    if (ref) {
+      setTimeout(() => { ref.focus(); });
+    }
+  }
+
   changeTab = (e, tabIndex) => {
     const { changeTab } = this.props;
     changeTab(tabIndex);
@@ -82,7 +90,7 @@ class ContentCreator extends PureComponent {
                   <div className={classes.container} ref={this.setControlsContainerBounds}>
                     {
                       Object.values(controls).map(control => (
-                        <DragControl key={control.id} {...control} setInputRef={this.setInputRef} />
+                        <DragControl key={control.id} {...control} setInputRef={this.setInputRef} focus={this.focus} />
                       ))
                     }
                   </div>
