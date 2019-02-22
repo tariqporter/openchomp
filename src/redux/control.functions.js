@@ -1,4 +1,5 @@
 import uuidv4 from 'uuid/v4';
+import { stateToHTML } from 'draft-js-export-html';
 import { EditorState, ContentState } from 'draft-js';
 
 export const padding = 8;
@@ -21,6 +22,14 @@ export const getDefaultControl = () => {
     placeholder: ''
   };
   return defaultControl;
+};
+
+export const getPreviewHtml = (controls) => {
+  const previewHtml = Object.values(controls)
+    .filter(control => !control.isDragControl)
+    .map(control => stateToHTML(control.editorState.getCurrentContent())).join('');
+    // console.log(previewHtml);
+  return previewHtml;
 };
 
 const getIndex = (controls, top) => {
