@@ -49,7 +49,6 @@ class ContentCreator extends PureComponent {
 
   focus = (id) => {
     const ref = this.inputRefs[id];
-    console.log(ref);
     if (ref) {
       setTimeout(() => { ref.focus(); });
     }
