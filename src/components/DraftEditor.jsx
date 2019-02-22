@@ -1,31 +1,30 @@
-import React, { Component, PureComponent, forwardRef, Fragment } from 'react';
+import React, { PureComponent, forwardRef } from 'react';
 import Editor from 'draft-js-plugins-editor';
 import createEmojiPlugin from 'draft-js-emoji-plugin';
 import createInlineToolbarPlugin from 'draft-js-inline-toolbar-plugin';
-// import 'draft-js-emoji-plugin/lib/plugin.css'
 
-const emojiPlugin = createEmojiPlugin();
-const inlineToolbarPlugin = createInlineToolbarPlugin();
+class DraftEditor extends PureComponent {
+  constructor(props) {
+    super(props);
+    const inlineToolbarPlugin = createInlineToolbarPlugin();
+    const emojiPlugin = createEmojiPlugin();
+    this.state = {
+      InlineToolbar: inlineToolbarPlugin.InlineToolbar,
+      EmojiSuggestions: emojiPlugin.EmojiSuggestions,
+      plugins: [emojiPlugin, inlineToolbarPlugin]
+    };
+  }
 
-const { EmojiSuggestions } = emojiPlugin;
-const { InlineToolbar } = inlineToolbarPlugin;
-
-
-class DraftEditor extends Component {
   render() {
-    // const { className, style, forwardedRef, ...props } = this.props;
+    const { className, style, forwardedRef, ...props } = this.props;
+    const { EmojiSuggestions, InlineToolbar, plugins } = this.state;
     return (
-      <div>
+      <div className={className} style={style}>
         <Editor
-          editorState={this.props.editorState}
-          onChange={this.props.onChange}
-          plugins={[emojiPlugin, inlineToolbarPlugin]}
-        />
-        {/* <Editor
           ref={forwardedRef}
-          plugins={[emojiPlugin, inlineToolbarPlugin]}
+          plugins={plugins}
           {...props}
-        /> */}
+        />
         <EmojiSuggestions />
         <InlineToolbar />
       </div>
@@ -33,6 +32,8 @@ class DraftEditor extends Component {
   }
 }
 
-export default forwardRef((props, ref) => {
-  return <DraftEditor {...props} forwardedRef={ref} />;
-});
+export default DraftEditor;
+
+// export default forwardRef((props, ref) => {
+//   return <DraftEditor {...props} forwardedRef={ref} />;
+// });

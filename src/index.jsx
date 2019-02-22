@@ -10,6 +10,7 @@ import rootReducer from './redux/reducer';
 import './index.css';
 import 'draft-js/dist/Draft.css';
 import 'draft-js-inline-toolbar-plugin/lib/plugin.css';
+import 'draft-js-emoji-plugin/lib/plugin.css'
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 

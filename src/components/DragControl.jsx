@@ -63,7 +63,7 @@ class DragControl extends PureComponent {
                   (
                     <Paper className={cl(classes.draggable, 'draggable-drag-bar')} style={{ top, left, width }}>
                       <DraftEditor
-                        ref={this.setInputRef}
+                        forwardedRef={this.setInputRef}
                         className={cl(classes.text, classes.text_dragging)}
                         editorState={editorState}
                         onChange={() => { }}
@@ -76,7 +76,7 @@ class DragControl extends PureComponent {
                       <div className={cl(classes.dragBar, 'draggable-drag-bar')} />
                       <DraftEditor
                         onChange={this.changeTextControl}
-                        ref={this.setInputRef}
+                        forwardedRef={this.setInputRef}
                         className={classes.text}
                         editorState={editorState}
                         placeholder={placeholder}
