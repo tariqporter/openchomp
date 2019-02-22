@@ -1,5 +1,7 @@
 import uuidv4 from 'uuid/v4';
 import { EditorState, ContentState } from 'draft-js';
+// import { EditorState, ContentState } from 'draft-js';
+// import { createEditorStateWithText } from 'draft-js-plugins-editor';
 
 export const padding = 8;
 export const controlHeight = 136;
@@ -18,6 +20,7 @@ export const getDefaultControl = () => {
     isDragControl: true,
     isDragging: false,
     editorState: EditorState.createWithContent(ContentState.createFromText('Text Block')),
+    // editorState: createEditorStateWithText('Text Block'),
     placeholder: ''
   };
   return defaultControl;
@@ -72,6 +75,7 @@ export const getDropControls = (state, id) => {
   const width = state.containerBounds.width - (2 * state.padding);
   const dc = getDefaultControl();
   const editorState = control.isDragControl ? EditorState.createEmpty() : dc.editorState;
+  // const editorState = control.isDragControl ? createEditorStateWithText('') : dc.editorState;
 
   if (!control.isDragControl || state.controlsContainerBounds.left + control.left < state.containerBounds.left + state.containerBounds.width) {
     controls[id] = { ...controls[id], ...getDropControl(), index, top, left, width, editorState };

@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Paper, IconButton } from '@material-ui/core';
 import { Delete } from '@material-ui/icons';
-// import { Editor } from 'draft-js';
 import DraftEditor from './DraftEditor';
 import { DraggableCore } from 'react-draggable';
 import { startDragControlAction, dragControlAction, dropControlAction, changeTextControlAction, deleteControlAction } from '../redux/actions';
