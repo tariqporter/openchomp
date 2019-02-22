@@ -29,7 +29,8 @@ export default (state = initialState, action) => {
     }
     case ACTION.DROP_CONTROL: {
       const controls = getDropControls(state, action.id);
-      return { ...state, controls };
+      const previewHtml = getPreviewHtml(state.controls);
+      return { ...state, controls, previewHtml };
     }
     case ACTION.SET_CONTAINER_BOUNDS: {
       return { ...state, containerBounds: { ...state.containerBounds, left: action.left, top: action.top, width: action.width, height: action.height } };

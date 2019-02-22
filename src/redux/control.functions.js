@@ -27,8 +27,9 @@ export const getDefaultControl = () => {
 export const getPreviewHtml = (controls) => {
   const previewHtml = Object.values(controls)
     .filter(control => !control.isDragControl)
+    .sort((a, b) => a.index - b.index)
     .map(control => stateToHTML(control.editorState.getCurrentContent())).join('');
-    // console.log(previewHtml);
+  // console.log(previewHtml);
   return previewHtml;
 };
 
