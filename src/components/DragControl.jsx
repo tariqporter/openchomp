@@ -1,8 +1,9 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { TextField, Paper, IconButton } from '@material-ui/core';
+import { Paper, IconButton } from '@material-ui/core';
 import { Delete } from '@material-ui/icons';
+import DraftEditor from './DraftEditor';
 import { DraggableCore } from 'react-draggable';
 import { startDragControlAction, dragControlAction, dropControlAction, changeTextControlAction, deleteControlAction } from '../redux/actions';
 import classes from './DragControl.module.scss';
@@ -26,9 +27,9 @@ class DragControl extends PureComponent {
     dropControl(id);
   }
 
-  changeTextControl = (e) => {
+  changeTextControl = (editorState) => {
     const { id, changeTextControl } = this.props;
-    changeTextControl(id, e.target.value);
+    changeTextControl(id, editorState);
   }
 
   deleteControl = () => {
@@ -42,7 +43,7 @@ class DragControl extends PureComponent {
   }
 
   render() {
-    const { id, isDragControl, isDragging, placeholder, text, top, left, width, dropLeft, dropTop, dropWidth, dropHeight } = this.props;
+    const { id, isDragControl, isDragging, placeholder, text, editorState, top, left, width, dropLeft, dropTop, dropWidth, dropHeight } = this.props;
     return (
       <div>
         {
@@ -61,24 +62,23 @@ class DragControl extends PureComponent {
                 isDragControl ?
                   (
                     <Paper className={cl(classes.draggable, 'draggable-drag-bar')} style={{ top, left, width }}>
-                      <TextField
-                        inputRef={this.setInputRef}
-                        multiline
+                      <DraftEditor
+                        forwardedRef={this.setInputRef}
                         className={cl(classes.text, classes.text_dragging)}
-                        disabled
-                        value={text}
+                        editorState={editorState}
+                        onChange={() => { }}
+                        readOnly
                       />
                     </Paper>
                   ) :
                   (
                     <Paper className={cl(classes.draggable, !isDragging && classes.draggable_dropped)} style={{ top, left, width }}>
                       <div className={cl(classes.dragBar, 'draggable-drag-bar')} />
-                      <TextField
+                      <DraftEditor
                         onChange={this.changeTextControl}
-                        inputRef={this.setInputRef}
-                        multiline
+                        forwardedRef={this.setInputRef}
                         className={classes.text}
-                        value={text}
+                        editorState={editorState}
                         placeholder={placeholder}
                       />
                       <IconButton className={classes.deleteButton} onClick={this.deleteControl}>

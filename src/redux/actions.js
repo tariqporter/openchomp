@@ -33,10 +33,16 @@ export const dropControlAction = (id) => ({
   id
 });
 
-export const changeTextControlAction = (id, text) => ({
+// export const changeTextControlAction = (id, text) => ({
+//   type: ACTION.CHANGE_TEXT_CONTROL,
+//   id,
+//   text
+// });
+
+export const changeTextControlAction = (id, editorState) => ({
   type: ACTION.CHANGE_TEXT_CONTROL,
   id,
-  text
+  editorState
 });
 
 export const setContainerBoundsAction = (left, top, width, height) => ({
