@@ -46,6 +46,21 @@ export default (state = initialState, action) => {
     case ACTION.SET_CONTAINER_BOUNDS: {
       return { ...state, containerBounds: { ...state.containerBounds, left: action.left, top: action.top, width: action.width, height: action.height } };
     }
+    case ACTION.SET_CONTROL_HEIGHT: {
+      const controls = { ...state.controls };
+      const diff = action.height - controls[action.id].height;
+      // console.log(action.height, controls[action.id].height)
+      // const control = controls[action.id];
+      controls[action.id] = { ...controls[action.id], height: action.height };
+
+      Object.values(controls)
+        .filter(c => !c.isDragControl && c.index > controls[action.id].index)
+        .forEach(c => {
+          controls[c.id] = { ...controls[c.id], top: controls[c.id].top + diff };
+        });
+
+      return { ...state, controls };
+    }
     case ACTION.SET_CONTROLS_CONTAINER_BOUNDS: {
       const controls = { ...state.controls };
       Object.values(controls).forEach(c => {

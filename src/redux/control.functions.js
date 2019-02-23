@@ -12,6 +12,7 @@ export const getDefaultControl = () => {
     left: padding,
     top: padding,
     width: null,
+    height: 0,
     dropLeft: 0,
     dropTop: 0,
     dropWidth: null,
@@ -28,7 +29,6 @@ export const getPreviewHtml = (controls) => {
   const previewHtml = Object.values(controls)
     .filter(control => !control.isDragControl)
     .map(control => stateToHTML(control.editorState.getCurrentContent())).join('');
-    // console.log(previewHtml);
   return previewHtml;
 };
 

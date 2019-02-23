@@ -6,9 +6,9 @@ export const ACTION = {
   DROP_CONTROL: 'DROP_CONTROL',
   SET_CONTAINER_BOUNDS: 'SET_CONTAINER_BOUNDS',
   SET_CONTROLS_CONTAINER_BOUNDS: 'SET_CONTROLS_CONTAINER_BOUNDS',
-  SET_CONTROL_BOUNDS: 'SET_CONTROL_BOUNDS',
-  CHANGE_TAB: 'CHANGE_TAB',
-  SET_CONTROL_HEIGHT: 'SET_CONTROL_HEIGHT'
+  // SET_CONTROL_BOUNDS: 'SET_CONTROL_BOUNDS',
+  SET_CONTROL_HEIGHT: 'SET_CONTROL_HEIGHT',
+  CHANGE_TAB: 'CHANGE_TAB'
 };
 
 export const deleteControlAction = id => ({
@@ -60,6 +60,15 @@ export const setControlHeightAction = (id, height) => ({
   id,
   height
 });
+
+// export const setControlBoundsAction = (id, left, top, width, height) => ({
+//   type: ACTION.SET_CONTROL_BOUNDS,
+//   id,
+//   left,
+//   top,
+//   width,
+//   height
+// });
 
 export const changeTabAction = (tabIndex) => ({
   type: ACTION.CHANGE_TAB,

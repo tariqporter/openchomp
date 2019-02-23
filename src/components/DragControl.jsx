@@ -28,14 +28,19 @@ class DragControl extends PureComponent {
   }
 
   changeTextControl = (editorState) => {
-    const { id, height, changeTextControl, setControlHeight } = this.props;
+    const { id, height, setControlHeight, changeTextControl } = this.props;
     changeTextControl(id, editorState);
-    if (this.domRef) {
-      const rect = this.domRef.getBoundingClientRect();
-      if (rect.height !== height) {
-        setControlHeight(id, rect.height);
-      }
-      // console.log(rect.height);
+    if (this.controlContainerRef) {
+      setTimeout(() => {
+        const rect = this.controlContainerRef.getBoundingClientRect();
+        // if (rect,height) 
+        // console.log(rect.height, height);
+        if (rect.height && rect.height !== height) {
+          console.log(rect.height)
+          setControlHeight(id, rect.height);
+        }
+        // console.log(rect.height);
+      });
     }
   }
 
@@ -64,6 +69,7 @@ class DragControl extends PureComponent {
 
   render() {
     const { id, isDragControl, isDragging, placeholder, text, editorState, top, left, width, dropLeft, dropTop, dropWidth, dropHeight } = this.props;
+    console.log(width)
     return (
       <div>
         {
@@ -92,8 +98,8 @@ class DragControl extends PureComponent {
                     </Paper>
                   ) :
                   (
-                    <RootRef rootRef={r => this.domRef = r}>
-                      <Paper className={cl(classes.draggable, !isDragging && classes.draggable_dropped)} style={{ top, left, width }}>
+                    <Paper className={cl(classes.draggable, !isDragging && classes.draggable_dropped)} style={{ top, left, width }}>
+                      <div style={{ height: '100%' }} ref={r => this.controlContainerRef = r}>
                         <div className={cl(classes.dragBar, 'draggable-drag-bar')} />
                         <DraftEditor
                           onChange={this.changeTextControl}
@@ -106,8 +112,8 @@ class DragControl extends PureComponent {
                         <IconButton className={classes.deleteButton} onClick={this.deleteControl}>
                           <Delete />
                         </IconButton>
-                      </Paper>
-                    </RootRef>
+                      </div>
+                    </Paper>
                   )
               }
             </div>
