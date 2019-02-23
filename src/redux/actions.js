@@ -1,5 +1,4 @@
 export const ACTION = {
-  // TEXT_CHANGE: 'TEXT_CHANGE',
   CHANGE_TEXT_CONTROL: 'CHANGE_TEXT_CONTROL',
   DELETE_CONTROL: 'DELETE_CONTROL',
   START_DRAG_CONTROL: 'START_DRAG_CONTROL',
@@ -8,7 +7,8 @@ export const ACTION = {
   SET_CONTAINER_BOUNDS: 'SET_CONTAINER_BOUNDS',
   SET_CONTROLS_CONTAINER_BOUNDS: 'SET_CONTROLS_CONTAINER_BOUNDS',
   SET_CONTROL_BOUNDS: 'SET_CONTROL_BOUNDS',
-  CHANGE_TAB: 'CHANGE_TAB'
+  CHANGE_TAB: 'CHANGE_TAB',
+  SET_CONTROL_HEIGHT: 'SET_CONTROL_HEIGHT'
 };
 
 export const deleteControlAction = id => ({
@@ -33,12 +33,6 @@ export const dropControlAction = (id) => ({
   id
 });
 
-// export const changeTextControlAction = (id, text) => ({
-//   type: ACTION.CHANGE_TEXT_CONTROL,
-//   id,
-//   text
-// });
-
 export const changeTextControlAction = (id, editorState) => ({
   type: ACTION.CHANGE_TEXT_CONTROL,
   id,
@@ -61,12 +55,9 @@ export const setControlsContainerBoundsAction = (left, top, width, height) => ({
   height
 });
 
-export const setControlBoundsAction = (id, left, top, width, height) => ({
-  type: ACTION.SET_CONTROL_BOUNDS,
+export const setControlHeightAction = (id, height) => ({
+  type: ACTION.SET_CONTROL_HEIGHT,
   id,
-  left,
-  top,
-  width,
   height
 });
 
@@ -74,13 +65,3 @@ export const changeTabAction = (tabIndex) => ({
   type: ACTION.CHANGE_TAB,
   tabIndex
 });
-
-// export const textChangeAction = (e, v) => {
-//   const name = e.target ? e.target.name : e;
-//   const value = e.target ? e.target.value : v;
-//   return {
-//     type: ACTION.TEXT_CHANGE,
-//     name,
-//     value
-//   };
-// }

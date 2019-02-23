@@ -1,11 +1,11 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { Paper, IconButton } from '@material-ui/core';
+import { Paper, IconButton, RootRef } from '@material-ui/core';
 import { Delete } from '@material-ui/icons';
 import DraftEditor from './DraftEditor';
 import { DraggableCore } from 'react-draggable';
-import { startDragControlAction, dragControlAction, dropControlAction, changeTextControlAction, deleteControlAction } from '../redux/actions';
+import { startDragControlAction, dragControlAction, dropControlAction, changeTextControlAction, deleteControlAction, setControlHeightAction } from '../redux/actions';
 import classes from './DragControl.module.scss';
 
 const cl = (...classArr) => classArr.join(' ');
@@ -28,8 +28,15 @@ class DragControl extends PureComponent {
   }
 
   changeTextControl = (editorState) => {
-    const { id, changeTextControl } = this.props;
+    const { id, height, changeTextControl, setControlHeight } = this.props;
     changeTextControl(id, editorState);
+    if (this.domRef) {
+      const rect = this.domRef.getBoundingClientRect();
+      if (rect.height !== height) {
+        setControlHeight(id, rect.height);
+      }
+      // console.log(rect.height);
+    }
   }
 
   deleteControl = () => {
@@ -46,6 +53,14 @@ class DragControl extends PureComponent {
     const { id, focus } = this.props;
     focus(id);
   }
+
+  // domRef = (ref) => {
+  //   this.d
+  //   // if (ref) {
+  //   //   const rect = ref.getBoundingClientRect();
+  //   //   console.log(rect.height);
+  //   // }
+  // }
 
   render() {
     const { id, isDragControl, isDragging, placeholder, text, editorState, top, left, width, dropLeft, dropTop, dropWidth, dropHeight } = this.props;
@@ -77,20 +92,22 @@ class DragControl extends PureComponent {
                     </Paper>
                   ) :
                   (
-                    <Paper className={cl(classes.draggable, !isDragging && classes.draggable_dropped)} style={{ top, left, width }}>
-                      <div className={cl(classes.dragBar, 'draggable-drag-bar')} />
-                      <DraftEditor
-                        onChange={this.changeTextControl}
-                        forwardedRef={this.setInputRef}
-                        className={classes.text}
-                        editorState={editorState}
-                        placeholder={placeholder}
-                        onClick={this.focus}
-                      />
-                      <IconButton className={classes.deleteButton} onClick={this.deleteControl}>
-                        <Delete />
-                      </IconButton>
-                    </Paper>
+                    <RootRef rootRef={r => this.domRef = r}>
+                      <Paper className={cl(classes.draggable, !isDragging && classes.draggable_dropped)} style={{ top, left, width }}>
+                        <div className={cl(classes.dragBar, 'draggable-drag-bar')} />
+                        <DraftEditor
+                          onChange={this.changeTextControl}
+                          forwardedRef={this.setInputRef}
+                          className={classes.text}
+                          editorState={editorState}
+                          placeholder={placeholder}
+                          onClick={this.focus}
+                        />
+                        <IconButton className={classes.deleteButton} onClick={this.deleteControl}>
+                          <Delete />
+                        </IconButton>
+                      </Paper>
+                    </RootRef>
                   )
               }
             </div>
@@ -110,7 +127,8 @@ const mapDispatchToProps = dispatch => bindActionCreators({
   startDragControl: startDragControlAction,
   dragControl: dragControlAction,
   dropControl: dropControlAction,
-  deleteControl: deleteControlAction
+  deleteControl: deleteControlAction,
+  setControlHeight: setControlHeightAction
 }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(DragControl);

@@ -13,6 +13,18 @@ export default (state = initialState, action) => {
       const controls = getDeleteControls(state, action.id);
       return { ...state, controls };
     }
+    case ACTION.SET_CONTROL_HEIGHT: {
+      const controls = { ...state.controls };
+      const diff = action.height - controls[action.id].height;
+      controls[action.id] = { ...controls[action.id], height: action.height };
+      // const totalHeight = Object.values(controls).filter(control => !control.isDragControl).reduce((acc, control) => acc + control.height, 0);
+      // console.log(totalHeight);
+
+      Object.values(controls).filter(control => !control.isDragging && control.index > controls[action.id].index).forEach(control => {
+        controls[control.id] = { ...controls[control.id], top: controls[control.id].top + diff };
+      });
+      return { ...state, controls };
+    }
     case ACTION.CHANGE_TEXT_CONTROL: {
       const controls = { ...state.controls };
       controls[action.id] = { ...controls[action.id], editorState: action.editorState };
