@@ -1,6 +1,6 @@
 import initialState from './inititalState';
 import { ACTION } from './actions';
-import { getDropControls, getDragControls, getDeleteControls, getPreviewHtml } from './control.functions';
+import { getDropControls, getDragControls, getDeleteControls, getPreviewHtml, updateControlWidths } from './control.functions';
 
 export default (state = initialState, action) => {
   // console.log(action);
@@ -24,23 +24,18 @@ export default (state = initialState, action) => {
       return { ...state, controls };
     }
     case ACTION.DRAG_CONTROL: {
-      const controls = getDragControls(state, action.id, action.deltaX, action.deltaY);
+      const controls = getDragControls(state, action);
       return { ...state, controls };
     }
     case ACTION.DROP_CONTROL: {
-      const controls = getDropControls(state, action.id);
+      const controls = getDropControls(state, action);
       return { ...state, controls };
     }
-    case ACTION.SET_CONTAINER_BOUNDS: {
-      return { ...state, containerBounds: { ...state.containerBounds, left: action.left, top: action.top, width: action.width, height: action.height } };
+    case ACTION.SET_CONTENT_CONTAINER_BOUNDS: {
+      return { ...state, contentContainerBounds: { ...state.contentContainerBounds, left: action.left, top: action.top, width: action.width, height: action.height } };
     }
     case ACTION.SET_CONTROLS_CONTAINER_BOUNDS: {
-      const controls = { ...state.controls };
-      Object.values(controls).forEach(c => {
-        if (c.isDragControl) {
-          controls[c.id] = { ...controls[c.id], width: action.width - (2 * state.padding) };
-        }
-      });
+      const controls = updateControlWidths(state, action);
       return { ...state, controls, controlsContainerBounds: { ...state.controlsContainerBounds, left: action.left, top: action.top, width: action.width, height: action.height } };
     }
     default: {

@@ -5,7 +5,7 @@ export const ACTION = {
   START_DRAG_CONTROL: 'START_DRAG_CONTROL',
   DRAG_CONTROL: 'DRAG_CONTROL',
   DROP_CONTROL: 'DROP_CONTROL',
-  SET_CONTAINER_BOUNDS: 'SET_CONTAINER_BOUNDS',
+  SET_CONTENT_CONTAINER_BOUNDS: 'SET_CONTENT_CONTAINER_BOUNDS',
   SET_CONTROLS_CONTAINER_BOUNDS: 'SET_CONTROLS_CONTAINER_BOUNDS',
   SET_CONTROL_BOUNDS: 'SET_CONTROL_BOUNDS',
   CHANGE_TAB: 'CHANGE_TAB'
@@ -45,8 +45,8 @@ export const changeTextControlAction = (id, editorState) => ({
   editorState
 });
 
-export const setContainerBoundsAction = (left, top, width, height) => ({
-  type: ACTION.SET_CONTAINER_BOUNDS,
+export const setContentContainerBoundsAction = (left, top, width, height) => ({
+  type: ACTION.SET_CONTENT_CONTAINER_BOUNDS,
   left,
   top,
   width,

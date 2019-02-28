@@ -1,8 +1,9 @@
 import React, { PureComponent, Fragment } from 'react';
+import { createPortal } from 'react-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Grid, Paper, Tabs, Tab, withStyles, Tooltip } from '@material-ui/core';
-import { setContainerBoundsAction, setControlsContainerBoundsAction, changeTabAction } from '../redux/actions';
+import { setContentContainerBoundsAction, setControlsContainerBoundsAction, changeTabAction } from '../redux/actions';
 import DragControl from './DragControl';
 import { Edit, Photo } from '@material-ui/icons';
 import ContentPreview from './ContentPreview';
@@ -26,10 +27,16 @@ class ContentCreator extends PureComponent {
     this.inputRefs = {};
   }
 
+  componentWillMount = () => {
+    this.controlsPortal = document.createElement('div');
+    this.controlsPortal.id = 'controlsPortal';
+    document.body.appendChild(this.controlsPortal);
+  }
+
   setContainerBounds = (ref) => {
     if (ref) {
       const rect = ref.getBoundingClientRect();
-      this.props.setContainerBounds(rect.left, rect.top, rect.width, rect.height);
+      this.props.setContentContainerBounds(rect.left, rect.top, rect.width, rect.height);
     }
   }
 
@@ -88,9 +95,12 @@ class ContentCreator extends PureComponent {
                 <Paper>
                   <div className={classes.container} ref={this.setControlsContainerBounds}>
                     {
-                      Object.values(controls).map(control => (
-                        <DragControl key={control.id} {...control} setInputRef={this.setInputRef} focus={this.focus} />
-                      ))
+                      createPortal(
+                        Object.values(controls).map(control => (
+                          <DragControl key={control.id} {...control} setInputRef={this.setInputRef} focus={this.focus} />
+                        )),
+                        this.controlsPortal
+                      )
                     }
                   </div>
                 </Paper>
@@ -109,7 +119,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators({
-  setContainerBounds: setContainerBoundsAction,
+  setContentContainerBounds: setContentContainerBoundsAction,
   setControlsContainerBounds: setControlsContainerBoundsAction,
   changeTab: changeTabAction
 }, dispatch);
