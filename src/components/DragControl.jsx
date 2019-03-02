@@ -5,7 +5,7 @@ import { Paper, IconButton } from '@material-ui/core';
 import { Delete } from '@material-ui/icons';
 import DraftEditor from './DraftEditor';
 import { DraggableCore } from 'react-draggable';
-import { startDragControlAction, dragControlAction, dropControlAction, changeTextControlAction, deleteControlAction } from '../redux/actions';
+import { startDragControlAction, dragControlAction, dropControlAction, changeTextControlAction, deleteControlAction, setControlBoundsAction } from '../redux/actions';
 import classes from './DragControl.module.scss';
 
 const cl = (...classArr) => classArr.join(' ');
@@ -40,6 +40,14 @@ class DragControl extends PureComponent {
   setInputRef = (ref) => {
     const { id, setInputRef } = this.props;
     setInputRef(id, ref);
+  }
+
+  setControlContainerRef = (ref) => {
+    const { id, setControlBounds } = this.props;
+    if (ref) {
+      const rect = ref.getBoundingClientRect();
+      setControlBounds(id, rect.left, rect.top, rect.width, rect.height);
+    }
   }
 
   focus = () => {
@@ -78,18 +86,20 @@ class DragControl extends PureComponent {
                   ) :
                   (
                     <Paper className={cl(classes.draggable, !isDragging && classes.draggable_dropped)} style={{ top, left, width }}>
-                      <div className={cl(classes.dragBar, 'draggable-drag-bar')} />
-                      <DraftEditor
-                        onChange={this.changeTextControl}
-                        forwardedRef={this.setInputRef}
-                        className={classes.text}
-                        editorState={editorState}
-                        placeholder={placeholder}
-                        onClick={this.focus}
-                      />
-                      <IconButton className={classes.deleteButton} onClick={this.deleteControl}>
-                        <Delete />
-                      </IconButton>
+                      <div style={{ height: '100%' }} ref={this.setControlRef}>
+                        <div className={cl(classes.dragBar, 'draggable-drag-bar')} />
+                        <DraftEditor
+                          onChange={this.changeTextControl}
+                          forwardedRef={this.setInputRef}
+                          className={classes.text}
+                          editorState={editorState}
+                          placeholder={placeholder}
+                          onClick={this.focus}
+                        />
+                        <IconButton className={classes.deleteButton} onClick={this.deleteControl}>
+                          <Delete />
+                        </IconButton>
+                      </div>
                     </Paper>
                   )
               }
@@ -110,7 +120,8 @@ const mapDispatchToProps = dispatch => bindActionCreators({
   startDragControl: startDragControlAction,
   dragControl: dragControlAction,
   dropControl: dropControlAction,
-  deleteControl: deleteControlAction
+  deleteControl: deleteControlAction,
+  setControlBounds: setControlBoundsAction
 }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(DragControl);
