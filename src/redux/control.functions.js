@@ -41,6 +41,18 @@ const getIndex = (controls, top) => {
   return 0;
 };
 
+const getNewTop = (state, controls, control, top) => {
+  const { contentContainerBounds } = state;
+  const ordered = Object.values(controls).filter(x => x.id !== control.id).sort((a, b) => a.index - b.index);
+  let runningTop = contentContainerBounds.top + PADDING;
+  ordered.forEach(c => {
+    // c.top = runningTop;
+    runningTop += c.height + PADDING;
+  });
+  // control.dropTop = runningTop;
+  return { index: ordered.length, top: runningTop };
+};
+
 export const getDragControls = (state, action) => {
   const { id, deltaX, deltaY } = action;
   const { contentContainerBounds, controlsContainerBounds } = state;
@@ -55,11 +67,10 @@ export const getDragControls = (state, action) => {
   if (insideContentContainerBounds || !isDragControl) {
     const dropWidth = contentContainerBounds.width - (2 * PADDING);
     const dropLeft = contentContainerBounds.left + PADDING;
-    const index = getIndex(controls, top);
-    const dropTop = index * (control.height + PADDING) + PADDING + contentContainerBounds.top;
+    const { index, top: dropTop } = getNewTop(state, controls, control, top);
     const dropHeight = CONTROL_HEIGHT;
 
-    controls[id] = { ...controls[id], top, left, dropWidth, dropLeft, dropTop, dropHeight };
+    controls[id] = { ...controls[id], top, left, dropWidth, dropLeft, dropHeight, index, dropTop };
   } else {
     const dropWidth = controlsContainerBounds.width - (2 * PADDING);
     const dropLeft = controlsContainerBounds.left + PADDING;
@@ -84,8 +95,9 @@ export const getDropControls = (state, action) => {
   if (insideContentContainerBounds || !isDragControl) {
     const width = contentContainerBounds.width - (2 * PADDING);
     const left = contentContainerBounds.left + PADDING;
-    const index = getIndex(controls, top);
-    const newTop = index * (control.height + PADDING) + PADDING + contentContainerBounds.top;
+    // const index = getIndex(controls, top);
+    // const newTop = index * (control.height + PADDING) + PADDING + contentContainerBounds.top;
+    const { top: newTop } = getNewTop(state, controls, control, top);
 
     const editorState = isDragControl ? EditorState.createEmpty() : control.editorState;
     const placeholder = isDragControl ? 'Type text here' : control.placeholder;

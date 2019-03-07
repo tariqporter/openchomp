@@ -42,7 +42,7 @@ class DragControl extends PureComponent {
     setInputRef(id, ref);
   }
 
-  setControlContainerRef = (ref) => {
+  setControlRef = (ref) => {
     const { id, setControlBounds } = this.props;
     if (ref) {
       const rect = ref.getBoundingClientRect();

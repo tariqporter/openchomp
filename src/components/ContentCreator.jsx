@@ -30,6 +30,7 @@ class ContentCreator extends PureComponent {
   componentWillMount = () => {
     this.controlsPortal = document.createElement('div');
     this.controlsPortal.id = 'controlsPortal';
+    this.controlsPortal.style = "position:absolute;top:0;left:0;";
     document.body.appendChild(this.controlsPortal);
   }
 

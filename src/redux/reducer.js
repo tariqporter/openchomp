@@ -34,6 +34,7 @@ export default (state = initialState, action) => {
     case ACTION.SET_CONTROL_BOUNDS: {
       const controls = { ...state.controls };
       controls[action.id] = { ...controls[action.id], height: action.height };
+      return { ...state, controls };
     }
     case ACTION.SET_CONTENT_CONTAINER_BOUNDS: {
       return { ...state, contentContainerBounds: { ...state.contentContainerBounds, left: action.left, top: action.top, width: action.width, height: action.height } };
