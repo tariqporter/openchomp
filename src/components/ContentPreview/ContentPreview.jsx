@@ -3,8 +3,6 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { withStyles } from '@material-ui/core';
 
-// const cl = (...classArr) => classArr.join(' ');
-
 const styles = {
   root: {
     padding: 8

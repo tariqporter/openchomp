@@ -1,9 +1,9 @@
-import initialState from './inititalState';
+import initialState from './initialState';
 import { ACTION } from './actions';
-import { getDropControls, getDragControls, getDeleteControls, getPreviewHtml, updateControlWidths } from './control.functions';
+import { getDropControls, getDragControls, getDragStartControls, getDeleteControls, getPreviewHtml, updateControlWidths } from './control.functions';
 
 export default (state = initialState, action) => {
-  // console.log(action);
+  // console.log(state);
   switch (action.type) {
     case ACTION.CHANGE_TAB: {
       const previewHtml = getPreviewHtml(state.controls);
@@ -19,8 +19,7 @@ export default (state = initialState, action) => {
       return { ...state, controls };
     }
     case ACTION.START_DRAG_CONTROL: {
-      const controls = { ...state.controls };
-      controls[action.id] = { ...controls[action.id], isDragging: true };
+      const controls = getDragStartControls(state, action);
       return { ...state, controls };
     }
     case ACTION.DRAG_CONTROL: {

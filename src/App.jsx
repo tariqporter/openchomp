@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import ContentCreator from './components/ContentCreator';
+import ContentCreator from './components/ContentCreator/ContentCreator';
 import { withStyles } from '@material-ui/core';
 
 const styles = () => ({

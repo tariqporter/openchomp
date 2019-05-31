@@ -3,12 +3,11 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Paper, IconButton } from '@material-ui/core';
 import { Delete } from '@material-ui/icons';
-import DraftEditor from './DraftEditor';
+import DraftEditor from '../DraftEditor/DraftEditor';
 import { DraggableCore } from 'react-draggable';
-import { startDragControlAction, dragControlAction, dropControlAction, changeTextControlAction, deleteControlAction, setControlBoundsAction } from '../redux/actions';
+import { startDragControlAction, dragControlAction, dropControlAction, changeTextControlAction, deleteControlAction, setControlBoundsAction } from '../../redux/actions';
 import classes from './DragControl.module.scss';
-
-const cl = (...classArr) => classArr.join(' ');
+import { cl } from 'utils';
 
 class DragControl extends PureComponent {
   onStart = (e, context) => {
@@ -28,8 +27,12 @@ class DragControl extends PureComponent {
   }
 
   changeTextControl = (editorState) => {
-    const { id, changeTextControl } = this.props;
+    const { id, changeTextControl, setControlBounds } = this.props;
     changeTextControl(id, editorState);
+    setTimeout(() => {
+      const rect = this.controlRef.getBoundingClientRect();
+      setControlBounds(id, rect.left, rect.top, rect.width, rect.height);
+    });
   }
 
   deleteControl = () => {
@@ -44,8 +47,9 @@ class DragControl extends PureComponent {
 
   setControlRef = (ref) => {
     const { id, setControlBounds } = this.props;
-    if (ref) {
-      const rect = ref.getBoundingClientRect();
+    this.controlRef = ref;
+    if (this.controlRef) {
+      const rect = this.controlRef.getBoundingClientRect();
       setControlBounds(id, rect.left, rect.top, rect.width, rect.height);
     }
   }

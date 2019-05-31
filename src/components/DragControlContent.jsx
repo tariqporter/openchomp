@@ -4,9 +4,8 @@ import { bindActionCreators } from 'redux';
 import { TextField, IconButton, Paper, withStyles } from '@material-ui/core';
 import { Delete } from '@material-ui/icons';
 import { deleteControlAction } from '../redux/actions';
-import DragBar from './DragBar';
-
-const cl = (...classArr) => classArr.join(' ');
+import DragBar from './DragBar/DragBar';
+import { cl } from 'utils';
 
 const styles = theme => ({
   child: {

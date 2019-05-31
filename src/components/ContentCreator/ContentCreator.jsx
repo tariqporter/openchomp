@@ -3,12 +3,11 @@ import { createPortal } from 'react-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Grid, Paper, Tabs, Tab, withStyles, Tooltip } from '@material-ui/core';
-import { setContentContainerBoundsAction, setControlsContainerBoundsAction, changeTabAction } from '../redux/actions';
-import DragControl from './DragControl';
+import { setContentContainerBoundsAction, setControlsContainerBoundsAction, changeTabAction } from '../../redux/actions';
+import DragControl from '../DragControl/DragControl';
 import { Edit, Photo } from '@material-ui/icons';
-import ContentPreview from './ContentPreview';
-
-const cl = (...classArr) => classArr.join(' ');
+import ContentPreview from '../ContentPreview/ContentPreview';
+import { cl } from 'utils';
 
 const styles = {
   container: {
@@ -25,9 +24,6 @@ class ContentCreator extends PureComponent {
   constructor(props) {
     super(props);
     this.inputRefs = {};
-  }
-
-  componentWillMount = () => {
     this.controlsPortal = document.createElement('div');
     this.controlsPortal.id = 'controlsPortal';
     this.controlsPortal.style = "position:absolute;top:0;left:0;";
@@ -35,16 +31,20 @@ class ContentCreator extends PureComponent {
   }
 
   setContainerBounds = (ref) => {
+    const { setContentContainerBounds } = this.props;
     if (ref) {
+      const controlsPortalRect = this.controlsPortal.getBoundingClientRect();
       const rect = ref.getBoundingClientRect();
-      this.props.setContentContainerBounds(rect.left, rect.top, rect.width, rect.height);
+      setContentContainerBounds(rect.left, rect.top - controlsPortalRect.top, rect.width, rect.height);
     }
   }
 
   setControlsContainerBounds = (ref) => {
+    const { setControlsContainerBounds } = this.props;
     if (ref) {
+      const controlsPortalRect = this.controlsPortal.getBoundingClientRect();
       const rect = ref.getBoundingClientRect();
-      this.props.setControlsContainerBounds(rect.left, rect.top, rect.width, rect.height);
+      setControlsContainerBounds(rect.left, rect.top - controlsPortalRect.top, rect.width, rect.height);
     }
   }
 
