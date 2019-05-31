@@ -1,7 +1,7 @@
 import { store } from './store'
 import { startDragControlAction, dragControlAction, dropControlAction, setContentContainerBoundsAction, setControlsContainerBoundsAction } from '../redux/actions'
 
-it('should update indexes and positions of controls', () => {
+it('should update indexes and positions of existing and current control when dragging', () => {
   const dispatch = store.dispatch;
   let state = store.getState();
   const id = Object.keys(state.controls)[0];
