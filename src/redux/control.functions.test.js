@@ -1,16 +1,7 @@
-// import initialState from './initialState';
-// import { getDragStartControls } from './control.functions';
-
-import { createStore, applyMiddleware, compose } from 'redux';
-import thunk from 'redux-thunk';
-import rootReducer from '../redux/reducer';
+import { store } from './store'
 import { startDragControlAction, dragControlAction, dropControlAction, setContentContainerBoundsAction, setControlsContainerBoundsAction } from '../redux/actions'
 
 it('should update indexes and positions of controls', () => {
-  const store = createStore(rootReducer, compose(
-    applyMiddleware(thunk)
-  ));
-
   const dispatch = store.dispatch;
   let state = store.getState();
   const id = Object.keys(state.controls)[0];

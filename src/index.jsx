@@ -4,9 +4,7 @@ import { JssProvider } from 'react-jss';
 import { create } from 'jss';
 import { createGenerateClassName, jssPreset } from '@material-ui/core/styles';
 import { Provider } from 'react-redux';
-import { createStore, applyMiddleware, compose } from 'redux';
-import thunk from 'redux-thunk';
-import rootReducer from './redux/reducer';
+import { store } from './redux/store';
 import './index.css';
 import 'draft-js/dist/Draft.css';
 import 'draft-js-inline-toolbar-plugin/lib/plugin.css';
@@ -23,10 +21,6 @@ const jss = create({
   // We define a custom insertion point that JSS will look for injecting the styles in the DOM.
   insertionPoint: 'jss-insertion-point',
 });
-
-const store = createStore(rootReducer, compose(
-  applyMiddleware(thunk)
-));
 
 const Index = () => (
   <JssProvider jss={jss} generateClassName={generateClassName}>
