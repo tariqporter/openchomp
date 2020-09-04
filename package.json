@@ -13,7 +13,7 @@
     "draft-js-plugins-editor": "^2.1.1",
     "jss": "^9.8.7",
     "lorem-ipsum": "^1.0.6",
-    "node-sass": "^4.11.0",
+    "node-sass": "^4.13.1",
     "react": "^16.7.0",
     "react-dom": "^16.7.0",
     "react-draggable": "^3.1.1",
